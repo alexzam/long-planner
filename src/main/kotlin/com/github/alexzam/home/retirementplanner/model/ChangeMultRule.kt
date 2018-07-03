@@ -5,9 +5,10 @@ import java.math.BigDecimal
 
 @TypeAlias("R-CM")
 data class ChangeMultRule(val variable: String,
-                     val mult: BigDecimal) : Rule {
+                          val mult: BigDecimal,
+                          override val id: Long) : Rule() {
 
-    override fun apply(oldState: TimePoint, state: TimePoint) {
+    override fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>) {
         state[variable] *= mult
     }
 }

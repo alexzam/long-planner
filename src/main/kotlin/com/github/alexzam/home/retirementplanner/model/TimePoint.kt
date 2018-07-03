@@ -3,7 +3,7 @@ package com.github.alexzam.home.retirementplanner.model
 import java.math.BigDecimal
 import java.time.LocalDate
 
-data class TimePoint(val date: LocalDate,
+data class TimePoint(var date: LocalDate,
                      val values: MutableMap<Var, BigDecimal>,
                      val inflation: BigDecimal,
                      val events: MutableList<String> = mutableListOf()) {

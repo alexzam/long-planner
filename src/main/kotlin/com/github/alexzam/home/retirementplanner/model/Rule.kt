@@ -1,7 +1,14 @@
 package com.github.alexzam.home.retirementplanner.model
 
-abstract class Rule {
-    abstract fun apply(oldState: TimePoint, state: TimePoint)
+abstract class Rule(var enabled: Boolean = true) {
+    abstract val id: Long
+
+    fun doApply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
+        if (!enabled) return listOf()
+        return apply(oldState, state, rules)
+    }
+
+    abstract fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String>
 }
 
 //
