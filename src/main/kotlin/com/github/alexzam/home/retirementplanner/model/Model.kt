@@ -1,5 +1,6 @@
 package com.github.alexzam.home.retirementplanner.model
 
+import com.github.alexzam.home.retirementplanner.model.rules.Rule
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias

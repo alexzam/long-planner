@@ -1,10 +1,17 @@
-package com.github.alexzam.home.retirementplanner.model
+package com.github.alexzam.home.retirementplanner.model.rules
+
+import com.github.alexzam.home.retirementplanner.model.TimePoint
+import com.github.alexzam.home.retirementplanner.model.conditions.Condition
 
 abstract class Rule(var enabled: Boolean = true) {
     abstract val id: Long
+    abstract val condition: Condition?
 
     fun doApply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
         if (!enabled) return listOf()
+
+        if (condition?.check(state) == false) return listOf()
+
         return apply(oldState, state, rules)
     }
 
