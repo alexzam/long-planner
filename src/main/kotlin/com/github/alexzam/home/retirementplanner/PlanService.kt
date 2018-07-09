@@ -20,7 +20,7 @@ class PlanService {
         while (currentPoint.date.isBefore(plan.end)) {
             rules.forEach { rule -> rule.doApply(oldPoint, currentPoint, rules) }
 
-            oldPoint = currentPoint.copy(events = mutableListOf())
+            oldPoint = currentPoint.copy()
             oldPoint.values
                     .filterKeys { !it.keep }
                     .mapValues { entry -> entry.key.initialValue }

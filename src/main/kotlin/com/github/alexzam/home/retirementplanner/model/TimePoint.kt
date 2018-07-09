@@ -17,4 +17,10 @@ data class TimePoint(var date: LocalDate,
         val varr = values.keys.find { it.name == variable } ?: return BigDecimal.ZERO
         return values[varr]!!
     }
+
+    fun copy(): TimePoint {
+        val valuesCopy = mutableMapOf<Var, BigDecimal>()
+        valuesCopy.putAll(values)
+        return TimePoint(date, valuesCopy, inflation)
+    }
 }
