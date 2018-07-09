@@ -11,10 +11,12 @@ import java.time.LocalDate
 fun main(args: Array<String>) {
     val planService = PlanService()
 
-    val var1 = Var("Индекс", true, BigDecimal.valueOf(100_000L))
+    val etf = Var("Индекс", true, BigDecimal.valueOf(300_000L))
+    val sal = Var("sal", true, BigDecimal.valueOf(140000 + 105000 * 0.87))
+
     val ruleEtf = ChangeMultRule("Индекс", BigDecimal.valueOf(1 + .06 / 12), 1, null)
-    val ruleAdd = ChangeRule("get('Индекс') + 20000", "Индекс", 2, null)
-    val plan = Plan(ObjectId(), "Test", LocalDate.now(), LocalDate.of(2020, 5, 1), listOf(var1),
+    val ruleAdd = ChangeRule("get('Индекс') + get('sal') * 0.08", "Индекс", 2, null)
+    val plan = Plan(ObjectId(), "Test", LocalDate.now(), LocalDate.of(2020, 5, 1), listOf(etf, sal),
             listOf(ruleEtf, ruleAdd))
 
     val points = planService.calculatePlan(plan)

@@ -4,6 +4,7 @@ import com.github.alexzam.home.retirementplanner.model.Plan
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Service
 class PlanService {
@@ -21,9 +22,10 @@ class PlanService {
             rules.forEach { rule -> rule.doApply(oldPoint, currentPoint, rules) }
 
             oldPoint = currentPoint.copy()
-            oldPoint.values
-                    .filterKeys { !it.keep }
-                    .mapValues { entry -> entry.key.initialValue }
+            oldPoint.values = oldPoint.values
+                    .mapValues { entry -> entry.value.setScale(2, RoundingMode.HALF_EVEN) }
+                    .mapValues { entry -> if (entry.key.keep) entry.value else entry.key.initialValue }
+                    .toMutableMap()
 
             points.add(oldPoint)
             currentPoint.date = currentPoint.date.plusMonths(1)
