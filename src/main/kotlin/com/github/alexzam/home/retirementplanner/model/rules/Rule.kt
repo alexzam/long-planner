@@ -7,7 +7,7 @@ abstract class Rule(var enabled: Boolean = true) {
     abstract val id: Long
     abstract val condition: Condition?
 
-    fun doApply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
+    fun doApply(oldState: TimePoint?, state: TimePoint, rules: List<Rule>): List<String> {
         if (!enabled) return listOf()
 
         if (condition?.check(state) == false) return listOf()
@@ -15,7 +15,7 @@ abstract class Rule(var enabled: Boolean = true) {
         return apply(oldState, state, rules)
     }
 
-    abstract fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String>
+    abstract fun apply(oldState: TimePoint?, state: TimePoint, rules: List<Rule>): List<String>
 }
 
 //

@@ -6,7 +6,7 @@ import org.springframework.data.annotation.TypeAlias
 
 @TypeAlias("R-E")
 data class EventRule(override val id: Long, val event: String, override val condition: Condition?) : Rule() {
-    override fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
+    override fun apply(oldState: TimePoint?, state: TimePoint, rules: List<Rule>): List<String> {
         return listOf(event)
     }
 }

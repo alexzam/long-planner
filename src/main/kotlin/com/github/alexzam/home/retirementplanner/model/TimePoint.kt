@@ -5,7 +5,6 @@ import java.time.LocalDate
 
 data class TimePoint(var date: LocalDate,
                      var values: MutableMap<Var, BigDecimal>,
-                     val inflation: BigDecimal,
                      val events: MutableList<String> = mutableListOf()) {
 
     operator fun set(variable: String, value: BigDecimal) {
@@ -25,6 +24,6 @@ data class TimePoint(var date: LocalDate,
     fun copy(): TimePoint {
         val valuesCopy = mutableMapOf<Var, BigDecimal>()
         valuesCopy.putAll(values)
-        return TimePoint(date, valuesCopy, inflation)
+        return TimePoint(date, valuesCopy)
     }
 }

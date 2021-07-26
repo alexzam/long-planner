@@ -5,6 +5,7 @@ import com.github.alexzam.home.retirementplanner.model.Var
 import org.springframework.expression.EvaluationContext
 import org.springframework.expression.PropertyAccessor
 import org.springframework.expression.TypedValue
+import org.springframework.expression.spel.SpelEvaluationException
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.expression.spel.support.SimpleEvaluationContext
 import org.springframework.stereotype.Service
@@ -23,10 +24,14 @@ class CalcService {
                 setVariable("prev", prevTimePoint)
             }
 
-        val ret = parser.parseExpression(variable.expression)
-            .getValue(evaluationContext)
+        val ret = try {
+            parser.parseExpression(variable.expression)
+                .getValue(evaluationContext)
+        } catch (e: SpelEvaluationException) {
+            variable.initialValue
+        }
 
-        val bdRet = when(ret){
+        val bdRet = when (ret) {
             is BigDecimal -> ret
             is Int -> BigDecimal.valueOf(ret.toLong())
             is Long -> BigDecimal.valueOf(ret)
@@ -34,18 +39,18 @@ class CalcService {
             else -> throw IllegalArgumentException("Unknown return type ${ret::class.qualifiedName}")
         }
 
-        return bdRet ?: BigDecimal.ZERO
+        return bdRet ?: variable.initialValue
     }
 
-    fun getDependencies(variable: Var) : Set<String> {
-        val point = TimePoint(LocalDate.MIN, mutableMapOf(), BigDecimal.ZERO, mutableListOf())
+    fun getDependencies(variable: Var): Set<String> {
+        val point = TimePoint(LocalDate.MIN, mutableMapOf(), mutableListOf())
         val loggingPropertyAccessor = LoggingPropertyAccessor()
 
         val evaluationContext = SimpleEvaluationContext.Builder(loggingPropertyAccessor)
             .withRootObject(point)
             .build()
             .apply {
-                setVariable("prev", point)
+                setVariable("prev", point.copy(date = LocalDate.MAX))
             }
 
         parser.parseExpression(variable.expression)
@@ -62,7 +67,7 @@ object TimepointPropertyAccessor : PropertyAccessor {
     override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean = true
 
     override fun read(context: EvaluationContext, target: Any?, name: String): TypedValue {
-        if(target == null) return TypedValue.NULL
+        if (target == null) return TypedValue.NULL
         val point = target as TimePoint
 
         return TypedValue(point[name])
@@ -82,8 +87,8 @@ class LoggingPropertyAccessor : PropertyAccessor {
     override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean = true
 
     override fun read(context: EvaluationContext, target: Any?, name: String): TypedValue {
-        accesses += name
-        return TypedValue.NULL
+        if ((target as TimePoint).date == LocalDate.MIN) accesses += name
+        return TypedValue(BigDecimal.ONE)
     }
 
     override fun canWrite(context: EvaluationContext, target: Any?, name: String): Boolean = false

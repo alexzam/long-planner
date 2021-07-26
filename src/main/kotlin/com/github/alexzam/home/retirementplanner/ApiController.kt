@@ -27,7 +27,7 @@ class ApiController @Autowired constructor(private val worldRepository: WorldRep
     fun getPlan(@PathParam("id") id: String) {
         val plan = worldRepository.findById(ObjectId(id)).orElseThrow { Exception("Not found") }
 
-        val points = calcService.calculateWorld(plan)
+//        val points = calcService.calculateWorld(plan)
     }
 
     @RequestMapping("/temp", produces = ["text/plain"])

@@ -2,9 +2,8 @@ package com.github.alexzam.home.retirementplanner;
 
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.Var
-import org.junit.Assert
 import org.junit.Assert.assertEquals
-import org.junit.Test;
+import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -13,13 +12,13 @@ class CalcServiceTest {
     fun calcVar() {
         val service = CalcService()
 
-        val var1 = Var(1, "a", false, expression = "13")
-        val var2 = Var(2, "b", false, expression = "a * 2")
-        val var3 = Var(3, "c", false, expression = "#prev.a + b + 1")
+        val var1 = Var(1, "a", expression = "13")
+        val var2 = Var(2, "b", expression = "a * 2")
+        val var3 = Var(3, "c", expression = "#prev.a + b + 1")
 
-        val timePoint = TimePoint(LocalDate.of(2021, 7, 1),
+        val timePoint = TimePoint(
+            LocalDate.of(2021, 7, 1),
             mutableMapOf(),
-            BigDecimal.ONE,
             mutableListOf()
         )
 

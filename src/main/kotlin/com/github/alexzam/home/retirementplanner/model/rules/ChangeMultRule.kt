@@ -11,7 +11,7 @@ data class ChangeMultRule(val variable: String,
                           override val id: Long,
                           override val condition: Condition?) : Rule() {
 
-    override fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
+    override fun apply(oldState: TimePoint?, state: TimePoint, rules: List<Rule>): List<String> {
         state[variable] *= mult
         return listOf()
     }

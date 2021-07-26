@@ -11,7 +11,7 @@ data class TransferRule(override val id: Long,
                         val to: String,
                         val amount: BigDecimal = BigDecimal.ONE,
                         override val condition: Condition?) : Rule() {
-    override fun apply(oldState: TimePoint, state: TimePoint, rules: MutableList<Rule>): List<String> {
+    override fun apply(oldState: TimePoint?, state: TimePoint, rules: List<Rule>): List<String> {
         val value = state[from] * amount
 
         state[from] -= value
