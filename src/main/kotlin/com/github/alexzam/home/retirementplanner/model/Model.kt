@@ -6,19 +6,28 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.repository.CrudRepository
 import java.math.BigDecimal
+import java.time.Duration
 import java.time.LocalDate
+import java.time.Period
 
 @TypeAlias("P")
-data class Plan(@Id val id: ObjectId,
-                val name: String,
-                val start: LocalDate,
-                val end: LocalDate,
-                val vars: List<Var>,
-                val rules: List<Rule>)
+data class World(
+    @Id val id: ObjectId,
+    val name: String,
+    val start: LocalDate,
+    val end: LocalDate,
+    val increment: Period,
+    val vars: List<Var>,
+    val rules: List<Rule>
+)
 
-interface PlansRepository : CrudRepository<Plan, ObjectId>
+interface WorldRepository : CrudRepository<World, ObjectId>
 
 @TypeAlias("V")
-data class Var(val name: String,
-               val keep: Boolean,
-               val initialValue: BigDecimal = BigDecimal.ZERO)
+data class Var(
+    val id: Long,
+    val name: String,
+    val keep: Boolean,
+    val initialValue: BigDecimal = BigDecimal.ZERO,
+    val expression: String = "0"
+)

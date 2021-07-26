@@ -13,6 +13,10 @@ data class TimePoint(var date: LocalDate,
         values[varr] = value
     }
 
+    operator fun set(variable: Var, value: BigDecimal) {
+        values[variable] = value
+    }
+
     operator fun get(variable: String): BigDecimal {
         val varr = values.keys.find { it.name == variable } ?: return BigDecimal.ZERO
         return values[varr]!!
