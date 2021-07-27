@@ -12,6 +12,7 @@ class PlanningService(
 ) {
     fun calculateWorld(world: World): List<TimePoint> {
         val varSequence = findSequence(world.vars)
+        val varsByName = world.vars.associateBy { it.name }
 
         val start = world.start
         val currentPoint = TimePoint(start, mutableMapOf(), mutableListOf())
@@ -28,8 +29,9 @@ class PlanningService(
             oldPoint = currentPoint.copy()
             oldPoint.values = oldPoint.values
                 .mapValues {
-                    if (it.value.scale() > it.key.digitsToKeep)
-                        it.value.setScale(it.key.digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
+                    val digitsToKeep = varsByName[it.key]!!.digitsToKeep
+                    if (it.value.scale() > digitsToKeep)
+                        it.value.setScale(digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
                     else it.value
                 }
                 .toMutableMap()
