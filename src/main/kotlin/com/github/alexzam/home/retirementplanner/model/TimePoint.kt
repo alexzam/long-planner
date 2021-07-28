@@ -1,6 +1,7 @@
 package com.github.alexzam.home.retirementplanner.model
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 
 data class TimePoint(
@@ -26,5 +27,16 @@ data class TimePoint(
         val valuesCopy = mutableMapOf<String, BigDecimal>()
         valuesCopy.putAll(values)
         return TimePoint(date, valuesCopy)
+    }
+
+    fun applyRounding(varsByName: Map<String, Var>) {
+        values = values
+            .mapValues {
+                val digitsToKeep = varsByName[it.key]!!.digitsToKeep
+                if (it.value.scale() > digitsToKeep)
+                    it.value.setScale(digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
+                else it.value
+            }
+            .toMutableMap()
     }
 }

@@ -4,43 +4,55 @@ import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.Var
 import com.github.alexzam.home.retirementplanner.model.World
 import org.springframework.stereotype.Component
-import java.math.RoundingMode
 
 @Component
 class PlanningService(
     val calcService: CalcService
 ) {
-    fun calculateWorld(world: World): List<TimePoint> {
+    fun calculateWorld(world: World, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
         val varSequence = findSequence(world.vars)
         val varsByName = world.vars.associateBy { it.name }
 
-        val start = world.start
-        val currentPoint = TimePoint(start, mutableMapOf(), mutableListOf())
+        val calculatedPoints = mutableListOf<TimePoint>()
+        val dates = presetPoints.asSequence()
+            .map { it.date }
+            .plus(generateSequence(world.start) { date ->
+                date.plus(world.increment).takeIf { it <= world.end }
+            })
+            .sorted()
+            .distinct()
+
+        val presetPointsByDate = presetPoints.associateBy { it.date }
+
+        var currentPoint: TimePoint
         var oldPoint: TimePoint? = null
-        val points = mutableListOf<TimePoint>()
 
-        while (currentPoint.date <= world.end) {
-            varSequence.forEach { variable ->
-                currentPoint[variable] = calcService.calculateVar(variable, oldPoint, currentPoint)
-            }
+        dates.forEach { date ->
+            currentPoint = TimePoint(date, mutableMapOf(), mutableListOf())
 
-            world.rules.forEach { it.doApply(oldPoint, currentPoint, world.rules) }
-
-            oldPoint = currentPoint.copy()
-            oldPoint.values = oldPoint.values
-                .mapValues {
-                    val digitsToKeep = varsByName[it.key]!!.digitsToKeep
-                    if (it.value.scale() > digitsToKeep)
-                        it.value.setScale(digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
-                    else it.value
-                }
-                .toMutableMap()
-
-            points.add(oldPoint)
-            currentPoint.date = currentPoint.date.plus(world.increment)
+            calculateTimePoint(currentPoint, oldPoint, presetPointsByDate[currentPoint.date], varSequence, world)
+            oldPoint = currentPoint
+                .apply { applyRounding(varsByName) }
+                .also { calculatedPoints.add(it) }
         }
 
-        return points
+        return calculatedPoints
+    }
+
+    private fun calculateTimePoint(
+        currentPoint: TimePoint,
+        oldPoint: TimePoint?,
+        presetPoint: TimePoint?,
+        varSequence: List<Var>,
+        world: World
+    ) {
+        varSequence.forEach { variable ->
+            currentPoint[variable] =
+                presetPoint?.values?.get(variable.name)
+                    ?: calcService.calculateVar(variable, oldPoint, currentPoint)
+        }
+
+        world.rules.forEach { it.doApply(oldPoint, currentPoint, world.rules) }
     }
 
     private fun findSequence(vars: List<Var>): List<Var> {
