@@ -39,4 +39,9 @@ data class TimePoint(
             }
             .toMutableMap()
     }
+
+    fun printAsRow() {
+        print("$date\t")
+        println(values.keys.sorted().map { values[it] }.joinToString("\t"))
+    }
 }

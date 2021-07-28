@@ -4,6 +4,7 @@ import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.Var
 import com.github.alexzam.home.retirementplanner.model.World
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 class PlanningService(
@@ -25,7 +26,7 @@ class PlanningService(
         val presetPointsByDate = presetPoints.associateBy { it.date }
 
         var currentPoint: TimePoint
-        var oldPoint: TimePoint? = null
+        var oldPoint = TimePoint(LocalDate.MIN, mutableMapOf(), mutableListOf())
 
         dates.forEach { date ->
             currentPoint = TimePoint(date, mutableMapOf(), mutableListOf())
@@ -41,7 +42,7 @@ class PlanningService(
 
     private fun calculateTimePoint(
         currentPoint: TimePoint,
-        oldPoint: TimePoint?,
+        oldPoint: TimePoint,
         presetPoint: TimePoint?,
         varSequence: List<Var>,
         world: World

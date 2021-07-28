@@ -29,6 +29,8 @@ class CalcService {
                 .getValue(evaluationContext)
         } catch (e: SpelEvaluationException) {
             variable.initialValue
+        } catch (e: ArithmeticException) {
+            variable.initialValue
         }
 
         val bdRet = when (ret) {
