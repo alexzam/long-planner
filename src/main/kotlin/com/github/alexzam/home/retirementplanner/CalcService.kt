@@ -8,11 +8,9 @@ import org.springframework.expression.TypedValue
 import org.springframework.expression.spel.SpelEvaluationException
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.expression.spel.support.SimpleEvaluationContext
-import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDate
 
-@Service
 class CalcService {
     private val parser = SpelExpressionParser()
 

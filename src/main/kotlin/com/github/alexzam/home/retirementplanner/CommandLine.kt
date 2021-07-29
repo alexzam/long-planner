@@ -1,13 +1,7 @@
 package com.github.alexzam.home.retirementplanner
 
-import com.github.alexzam.home.retirementplanner.model.World
-import com.github.alexzam.home.retirementplanner.model.Var
 import com.github.alexzam.home.retirementplanner.model.rules.ChangeMultRule
-import com.github.alexzam.home.retirementplanner.model.rules.ChangeRule
-import org.bson.types.ObjectId
 import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.Period
 
 fun main() {
     val planService = CalcService()
@@ -16,7 +10,7 @@ fun main() {
 //    val sal = Var("sal", true, BigDecimal.valueOf(140000 + 105000 * 0.87))
 
     val ruleEtf = ChangeMultRule("Индекс", BigDecimal.valueOf(1 + .06 / 12), 1, null)
-    val ruleAdd = ChangeRule("get('Индекс') + get('sal') * 0.08", "Индекс", 2, null)
+//    val ruleAdd = ChangeRule("get('Индекс') + get('sal') * 0.08", "Индекс", 2, null)
 //    val plan = World(ObjectId(), "Test", LocalDate.now(), LocalDate.of(2020, 5, 1), Period.ofMonths(1), listOf(etf, sal),
 //            listOf(ruleEtf, ruleAdd))
 

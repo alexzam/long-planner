@@ -2,9 +2,7 @@ package com.github.alexzam.home.retirementplanner.model.rules
 
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.conditions.Condition
-import org.springframework.data.annotation.TypeAlias
 
-@TypeAlias("R-S")
 data class SwitchRule(val rule: Long,
                       val enable: Boolean,
                       override val id: Long,

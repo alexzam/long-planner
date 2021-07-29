@@ -3,10 +3,8 @@ package com.github.alexzam.home.retirementplanner
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.Var
 import com.github.alexzam.home.retirementplanner.model.World
-import org.springframework.stereotype.Component
 import java.time.LocalDate
 
-@Component
 class PlanningService(
     val calcService: CalcService
 ) {

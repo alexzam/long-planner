@@ -1,14 +1,12 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.5.21'
+		kotlinVersion = '1.5.10'
 		springBootVersion = '2.0.3.RELEASE'
 	}
 	repositories {
-		jcenter()
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 	}
@@ -16,8 +14,6 @@ buildscript {
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 group = 'com.github.alexzam.home'
 version = '0.0.1-SNAPSHOT'
@@ -42,16 +38,11 @@ repositories {
 
 dependencies {
 	implementation 'org.litote.kmongo:kmongo-coroutine:4.2.8'
+	implementation 'org.springframework:spring-expression:5.3.9'
 
-	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('com.fasterxml.jackson.module:jackson-module-kotlin')
+	compile('com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4')
 
 //	implementation 'com.github.vittee.kformula:kformula:1.0.3'
 
-	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	compile("org.jetbrains.kotlin:kotlin-reflect")
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
 }
