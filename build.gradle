@@ -41,6 +41,8 @@ repositories {
 
 
 dependencies {
+	implementation 'org.litote.kmongo:kmongo-coroutine:4.2.8'
+
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
