@@ -2,7 +2,9 @@ package com.github.alexzam.home.retirementplanner.model.rules
 
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.conditions.Condition
+import kotlinx.serialization.Serializable
 
+@Serializable
 abstract class Rule(var enabled: Boolean = true) {
     abstract val id: Long
     abstract val condition: Condition?
