@@ -3,7 +3,6 @@ package com.github.alexzam.home.retirementplanner
 import com.github.alexzam.home.retirementplanner.model.TimePoint
 import com.github.alexzam.home.retirementplanner.model.Var
 import com.github.alexzam.home.retirementplanner.model.World
-import org.bson.types.ObjectId
 import org.junit.Assert
 import org.junit.Test
 import java.math.BigDecimal
@@ -20,7 +19,7 @@ class PlanningServiceTest {
         val varE = Var(5, "e", BigDecimal.ONE, expression = "#prev.e+d", digitsToKeep = 5)
 
         val world = World(
-            ObjectId(), "w1",
+            1, "w1",
             LocalDate.of(2020, 1, 1),
             LocalDate.of(2020, 12, 31),
             Period.ofMonths(1),
@@ -49,7 +48,7 @@ class PlanningServiceTest {
 
         val end = LocalDate.of(2020, 4, 1)
         val world = World(
-            ObjectId(),
+            2,
             "w1",
             LocalDate.of(2020, 1, 1),
             end,
@@ -112,7 +111,7 @@ class PlanningServiceTest {
         )
 
         val world = World(
-            ObjectId(),
+            3,
             "rw",
             LocalDate.of(2018, 7, 1),
             LocalDate.of(2018, 12, 1),
