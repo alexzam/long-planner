@@ -1,0 +1,27 @@
+{
+  "name": "planner-front",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env NODE_ENV=production webpack",
+    "build-dev": "webpack",
+    "validate": "svelte-check"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tsconfig/svelte": "^2.0.1",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.1.0",
+    "svelte": "^3.41.0",
+    "svelte-loader": "^3.1.2",
+    "svelte-preprocess": "^4.7.4",
+    "ts-loader": "^9.2.4",
+    "typescript": "^4.3.5",
+    "webpack": "^5.47.1",
+    "webpack-cli": "^4.7.2"
+  }
+}
