@@ -6,6 +6,8 @@ import com.example.plugins.configureSerialization
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
+class App
+
 fun main() {
     // "Config"
     val port = System.getenv("PORT")?.toInt() ?: 8080

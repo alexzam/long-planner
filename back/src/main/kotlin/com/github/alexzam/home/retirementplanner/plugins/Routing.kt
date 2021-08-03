@@ -3,7 +3,6 @@ package com.example.plugins
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.content.*
-import io.ktor.response.*
 import io.ktor.routing.*
 
 fun Application.configureRouting() {
@@ -11,14 +10,12 @@ fun Application.configureRouting() {
 
 
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        defaultResource("index.html", "static")
 
-        static("/css") {
+        static("/js") {
             resources("static/js")
         }
-        static("/js") {
+        static("/css") {
             resources("static/css")
         }
     }

@@ -42,6 +42,8 @@ dependencies {
 
 tasks.register<Copy>("importFront") {
     dependsOn(":front:build")
-    from("../front/dist/build")
+    from("../front/dist")
     into("build/resources/main/static")
 }
+
+tasks["processResources"].dependsOn("importFront")

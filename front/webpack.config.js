@@ -7,11 +7,11 @@ const prod = mode === 'production';
 
 module.exports = {
     entry: {
-        'build/bundle': ['./src/index.ts']
+        'bundle': ['./src/index.js']
     },
     output: {
-        filename: '[name].js',
-        chunkFilename: '[name].[id].js'
+        filename: 'js/[name].js',
+        chunkFilename: 'js/[name].[id].js'
     },
     resolve: {
         alias: {
@@ -35,7 +35,7 @@ module.exports = {
                         compilerOptions: {
                             dev: !prod
                         },
-                        emitCss: prod,
+                        emitCss: true,
                         hotReload: !prod,
                         preprocess: sveltePreprocess({sourceMap: !prod})
                     }
@@ -60,7 +60,7 @@ module.exports = {
     mode,
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '[name].css'
+            filename: 'css/[name].css'
         })
     ],
     devtool: prod ? false : 'source-map',
