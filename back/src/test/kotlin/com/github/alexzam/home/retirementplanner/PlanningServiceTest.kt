@@ -1,8 +1,8 @@
 package com.github.alexzam.home.retirementplanner
 
-import com.github.alexzam.home.retirementplanner.model.TimePoint
-import com.github.alexzam.home.retirementplanner.model.Var
-import com.github.alexzam.home.retirementplanner.model.World
+import com.github.alexzam.longplanner.model.Plan
+import com.github.alexzam.longplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.Var
 import org.junit.Assert
 import org.junit.Test
 import java.math.BigDecimal
@@ -18,7 +18,7 @@ class PlanningServiceTest {
         val varD = Var(4, "d", BigDecimal.ONE, expression = "#prev.d * 1.002", digitsToKeep = 5)
         val varE = Var(5, "e", BigDecimal.ONE, expression = "#prev.e+d", digitsToKeep = 5)
 
-        val world = World(
+        val plan = Plan(
             1, "w1",
             LocalDate.of(2020, 1, 1),
             LocalDate.of(2020, 12, 31),
@@ -27,7 +27,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService()).calculateWorld(world)
+        val points = PlanningService(CalcService()).calculateWorld(plan)
         println("Date\tA\tB\tC\tD\tE")
         points.forEach { it.printAsRow() }
     }
@@ -47,7 +47,7 @@ class PlanningServiceTest {
         )
 
         val end = LocalDate.of(2020, 4, 1)
-        val world = World(
+        val plan = Plan(
             2,
             "w1",
             LocalDate.of(2020, 1, 1),
@@ -57,7 +57,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService()).calculateWorld(world, presets)
+        val points = PlanningService(CalcService()).calculateWorld(plan, presets)
 
         println("Date\tA\tB")
         points.forEach { it.printAsRow() }
@@ -110,7 +110,7 @@ class PlanningServiceTest {
             ),
         )
 
-        val world = World(
+        val plan = Plan(
             3,
             "rw",
             LocalDate.of(2018, 7, 1),
@@ -120,7 +120,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val result = PlanningService(CalcService()).calculateWorld(world, presets)
+        val result = PlanningService(CalcService()).calculateWorld(plan, presets)
 
         print("Date:\t")
         println(vars.map { it.name }.sorted().joinToString("\t"))

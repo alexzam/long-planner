@@ -1,6 +1,6 @@
-package com.github.alexzam.home.retirementplanner.model.conditions
+package com.github.alexzam.longplanner.model.conditions
 
-import com.github.alexzam.home.retirementplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.TimePoint
 import java.math.BigDecimal
 
 class ValueReachCondition(val variable: String, val value: BigDecimal) : Condition {

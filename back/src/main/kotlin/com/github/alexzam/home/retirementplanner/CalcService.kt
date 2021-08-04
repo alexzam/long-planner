@@ -1,7 +1,7 @@
 package com.github.alexzam.home.retirementplanner
 
-import com.github.alexzam.home.retirementplanner.model.TimePoint
-import com.github.alexzam.home.retirementplanner.model.Var
+import com.github.alexzam.longplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.Var
 import org.springframework.expression.EvaluationContext
 import org.springframework.expression.PropertyAccessor
 import org.springframework.expression.TypedValue

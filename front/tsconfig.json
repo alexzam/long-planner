@@ -2,6 +2,7 @@
   "extends": "@tsconfig/svelte/tsconfig.json",
   "include": [
     "src/**/*",
+    "generated/**/*",
     "src/node_modules/**/*"
   ],
   "exclude": [

@@ -4,8 +4,14 @@ tasks.register<Exec>("npm-install") {
     outputs.dir("node_modules")
 }
 
+tasks.register<Copy>("importModel") {
+    dependsOn(":back:model-exporter:makeJs")
+    from("../back/model-exporter/build/js")
+    into("generated")
+}
+
 tasks.register<Exec>("webpack-dev") {
-    dependsOn(":back:model-exporter:makeJs", "npm-install")
+    dependsOn("importModel", "npm-install")
     group = "build"
     commandLine = listOf("npm", "run", "build-dev")
     inputs.files(fileTree("src"))
@@ -15,7 +21,7 @@ tasks.register<Exec>("webpack-dev") {
 }
 
 tasks.register<Exec>("webpack-prod") {
-    dependsOn(":back:model-exporter:makeJs", "npm-install")
+    dependsOn("importModel", "npm-install")
     group = "build"
     commandLine = listOf("npm", "run", "build")
     inputs.files(fileTree("src"))

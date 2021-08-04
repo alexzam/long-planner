@@ -8,4 +8,4 @@ pluginManagement {
 }
 
 rootProject.name = "long-planner"
-include("back", "back:model-exporter", "front")
+include("back", "back:model", "back:model-exporter", "front")

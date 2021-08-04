@@ -1,4 +1,4 @@
-package com.github.alexzam.home.retirementplanner.model
+package com.github.alexzam.longplanner.model
 
 import java.math.BigDecimal
 import java.math.RoundingMode

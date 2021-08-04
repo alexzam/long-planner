@@ -4,6 +4,7 @@ dist
 !gradle/wrapper/gradle-wrapper.jar
 node_modules
 gradle.properties
+front/generated
 
 ### IntelliJ IDEA ###
 .idea

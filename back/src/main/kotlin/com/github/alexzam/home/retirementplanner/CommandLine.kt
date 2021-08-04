@@ -1,6 +1,6 @@
 package com.github.alexzam.home.retirementplanner
 
-import com.github.alexzam.home.retirementplanner.model.rules.ChangeMultRule
+import com.github.alexzam.longplanner.model.rules.ChangeMultRule
 import java.math.BigDecimal
 
 fun main() {

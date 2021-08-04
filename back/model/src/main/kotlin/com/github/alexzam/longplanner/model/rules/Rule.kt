@@ -1,7 +1,7 @@
-package com.github.alexzam.home.retirementplanner.model.rules
+package com.github.alexzam.longplanner.model.rules
 
-import com.github.alexzam.home.retirementplanner.model.TimePoint
-import com.github.alexzam.home.retirementplanner.model.conditions.Condition
+import com.github.alexzam.longplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.conditions.Condition
 import kotlinx.serialization.Serializable
 
 @Serializable

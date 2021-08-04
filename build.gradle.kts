@@ -20,10 +20,7 @@ allprojects {
         }
     }
 
-    ext {
-        set("ktor_version", "1.6.1")
-        set("logback_version", "1.2.5")
-    }
+    val ktorVer by extra("1.6.1")
+    val logbackVer by extra("1.2.5")
+    val entityvcVer by extra("0.2.5")
 }
-
-val entityvcVer by extra("0.2.4")

@@ -1,12 +1,15 @@
 <script lang="ts">
-    function startAddPlan() {
-        console.info("Start add plan")
-    }
+    import PlansPage from "./PlansPage.svelte";
+    import PlanPage from "./PlanPage.svelte";
+
+    let currentPlan: number | null = null;
+
 </script>
 
 <div class="ui container">
-    <h2>Plans</h2>
-    <button class="ui primary button" on:click={startAddPlan}>
-        Add
-    </button>
+    {#if currentPlan === null}
+        <PlansPage bind:currentPlan/>
+    {:else }
+        <PlanPage planId={currentPlan}/>
+    {/if}
 </div>

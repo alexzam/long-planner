@@ -1,22 +1,22 @@
 package com.github.alexzam.home.retirementplanner
 
-import com.github.alexzam.home.retirementplanner.model.TimePoint
-import com.github.alexzam.home.retirementplanner.model.Var
-import com.github.alexzam.home.retirementplanner.model.World
+import com.github.alexzam.longplanner.model.Plan
+import com.github.alexzam.longplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.Var
 import java.time.LocalDate
 
 class PlanningService(
     val calcService: CalcService
 ) {
-    fun calculateWorld(world: World, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
-        val varSequence = findSequence(world.vars)
-        val varsByName = world.vars.associateBy { it.name }
+    fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
+        val varSequence = findSequence(plan.vars)
+        val varsByName = plan.vars.associateBy { it.name }
 
         val calculatedPoints = mutableListOf<TimePoint>()
         val dates = presetPoints.asSequence()
             .map { it.date }
-            .plus(generateSequence(world.start) { date ->
-                date.plus(world.increment).takeIf { it <= world.end }
+            .plus(generateSequence(plan.start) { date ->
+                date.plus(plan.increment).takeIf { it <= plan.end }
             })
             .sorted()
             .distinct()
@@ -29,7 +29,7 @@ class PlanningService(
         dates.forEach { date ->
             currentPoint = TimePoint(date, mutableMapOf(), mutableListOf())
 
-            calculateTimePoint(currentPoint, oldPoint, presetPointsByDate[currentPoint.date], varSequence, world)
+            calculateTimePoint(currentPoint, oldPoint, presetPointsByDate[currentPoint.date], varSequence, plan)
             oldPoint = currentPoint
                 .apply { applyRounding(varsByName) }
                 .also { calculatedPoints.add(it) }
@@ -43,7 +43,7 @@ class PlanningService(
         oldPoint: TimePoint,
         presetPoint: TimePoint?,
         varSequence: List<Var>,
-        world: World
+        plan: Plan
     ) {
         varSequence.forEach { variable ->
             currentPoint[variable] =
@@ -51,7 +51,7 @@ class PlanningService(
                     ?: calcService.calculateVar(variable, oldPoint, currentPoint)
         }
 
-        world.rules.forEach { it.doApply(oldPoint, currentPoint, world.rules) }
+        plan.rules.forEach { it.doApply(oldPoint, currentPoint, plan.rules) }
     }
 
     private fun findSequence(vars: List<Var>): List<Var> {

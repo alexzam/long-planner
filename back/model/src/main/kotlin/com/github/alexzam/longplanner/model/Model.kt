@@ -1,6 +1,8 @@
-package com.github.alexzam.home.retirementplanner.model
+package com.github.alexzam.longplanner.model
 
-import com.github.alexzam.home.retirementplanner.model.rules.Rule
+import com.github.alexzam.longplanner.model.rules.Rule
+import com.gitlab.alexzam.entityvc.model.Entity
+import com.gitlab.alexzam.entityvc.model.Field
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -9,9 +11,12 @@ import java.time.LocalDate
 import java.time.Period
 
 @Serializable
-data class World(
+@Entity
+data class Plan(
     @SerialName("_id")
+    @Field
     val id: Long,
+    @Field
     val name: String,
     @Contextual
     val start: LocalDate,

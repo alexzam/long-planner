@@ -25,6 +25,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
+    "@alexzam/entityvc-goodfields": "^0.1.0",
     "fomantic-ui": "^2.8.8"
   }
 }
