@@ -1,6 +1,6 @@
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
+val ktor_version: String by extra
+val kotlin_version: String by extra
+val logback_version: String by extra
 
 plugins {
     application
@@ -35,7 +35,7 @@ dependencies {
 
 //	implementation 'com.github.vittee.kformula:kformula:1.0.3'
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 }

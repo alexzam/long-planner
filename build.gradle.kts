@@ -19,6 +19,11 @@ allprojects {
             }
         }
     }
+
+    ext {
+        set("ktor_version", "1.6.1")
+        set("logback_version", "1.2.5")
+    }
 }
 
 val entityvcVer by extra("0.2.4")
