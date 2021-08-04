@@ -3,6 +3,7 @@ build
 dist
 !gradle/wrapper/gradle-wrapper.jar
 node_modules
+gradle.properties
 
 ### IntelliJ IDEA ###
 .idea
