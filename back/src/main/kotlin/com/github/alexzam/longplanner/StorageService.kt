@@ -8,6 +8,7 @@ import org.litote.kmongo.eq
 import org.litote.kmongo.findOneAndUpdateUpsert
 import org.litote.kmongo.inc
 import org.litote.kmongo.reactivestreams.KMongo
+import org.litote.kmongo.setValue
 
 class StorageService {
 
@@ -22,6 +23,10 @@ class StorageService {
         if (!result.wasAcknowledged()) throw Exception("Mongo write not acknowledged")
 
         return plan
+    }
+
+    suspend fun updateName(planId: Long, newName: String) {
+        plans.updateOne(Plan::id eq planId, setValue(Plan::name, newName))
     }
 
     private suspend fun getCounterValue(id: String): Long {

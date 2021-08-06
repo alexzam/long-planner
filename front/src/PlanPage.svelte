@@ -6,7 +6,9 @@
     export let planId: number;
 
     let plan: Plan = null;
+
     $: loadPlan(planId);
+    $: planUpdateName(plan?.name)
 
     function loadPlan(id: number) {
         if (id == 0) {
@@ -18,6 +20,11 @@
         } else if (plan == null || plan._id != planId) {
             // load plan
         }
+    }
+
+    function planUpdateName(name: string | null) {
+        if (name == null) return
+        backend.plans.updateName(planId, plan.name)
     }
 </script>
 

@@ -31,6 +31,16 @@ fun Application.configureRouting(storageService: StorageService) {
                 post {
                     call.respond(HttpStatusCode.Created, storageService.createPlan())
                 }
+
+                route("{planId}") {
+                    post("_updateName") {
+                        val planId = call.parameters["planId"]!!.toLong()
+                        val newName = call.request.queryParameters["name"]!!
+
+                        storageService.updateName(planId, newName)
+                        call.respondText("OK")
+                    }
+                }
             }
         }
     }

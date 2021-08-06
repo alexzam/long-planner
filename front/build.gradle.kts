@@ -41,5 +41,5 @@ tasks.register("build") {
 }
 
 tasks.register<Delete>("clean") {
-    delete("dist")
+    delete("dist", "generated")
 }
