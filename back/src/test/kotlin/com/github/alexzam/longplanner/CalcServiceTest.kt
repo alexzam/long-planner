@@ -1,4 +1,4 @@
-package com.github.alexzam.home.retirementplanner;
+package com.github.alexzam.longplanner;
 
 import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var

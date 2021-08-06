@@ -1,13 +1,21 @@
 import type {Plan} from "../generated/model";
 
-export const plans = {
+const backHost = "";
+
+const plans = {
     createPlan: function (): Promise<Plan> {
-        return new Promise<Plan>((resolve) => {
-            resolve({
-                id: id,
-                name: "aaa",
-                _entityName: "aaa"
-            })
-        });
+        return fetch(backHost + "/api/plans", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(resp => resp.json());
     }
 }
+
+const api = {
+    plans
+}
+
+export default api;

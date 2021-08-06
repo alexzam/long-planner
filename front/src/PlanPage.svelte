@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Plan} from "../generated/model";
     import EditableText from "./components/EditableText.svelte";
-    import {plans as plansApi} from "./backend";
+    import backend from "./backend";
 
     export let planId: number;
 
@@ -9,10 +9,15 @@
     $: loadPlan(planId);
 
     function loadPlan(id: number) {
-        plansApi.createPlan()
-            .then(p => {
-                plan = p;
-            });
+        if (id == 0) {
+            backend.plans.createPlan()
+                .then(p => {
+                    plan = p;
+                    planId = p._id;
+                });
+        } else if (plan == null || plan._id != planId) {
+            // load plan
+        }
     }
 </script>
 

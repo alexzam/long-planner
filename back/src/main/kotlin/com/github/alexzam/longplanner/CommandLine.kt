@@ -1,4 +1,4 @@
-package com.github.alexzam.home.retirementplanner
+package com.github.alexzam.longplanner
 
 import com.github.alexzam.longplanner.model.rules.ChangeMultRule
 import java.math.BigDecimal

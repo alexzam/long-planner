@@ -1,4 +1,4 @@
-package com.github.alexzam.home.retirementplanner
+package com.github.alexzam.longplanner
 
 import com.example.plugins.configureHTTP
 import com.example.plugins.configureRouting
@@ -18,7 +18,7 @@ fun main() {
     val storageService = StorageService()
 
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
-        configureRouting()
+        configureRouting(storageService)
         configureHTTP()
         configureSerialization()
     }.start(wait = true)
