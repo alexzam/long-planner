@@ -2,6 +2,7 @@ package com.github.alexzam.longplanner
 
 import com.github.alexzam.longplanner.model.Counter
 import com.github.alexzam.longplanner.model.Plan
+import com.github.alexzam.longplanner.model.ShortPlan
 import com.mongodb.client.model.ReturnDocument
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
@@ -29,11 +30,20 @@ class StorageService {
         plans.updateOne(Plan::id eq planId, setValue(Plan::name, newName))
     }
 
-    private suspend fun getCounterValue(id: String): Long {
-        return counters.findOneAndUpdate(
+    suspend fun getAllPlansShort(): List<ShortPlan> =
+        plans.withDocumentClass<ShortPlan>()
+            .find()
+            .ascendingSort(ShortPlan::id)
+            .projection(ShortPlan::id, ShortPlan::name)
+            .toList()
+
+    suspend fun getPlan(planId: Long): Plan? =
+        plans.findOneById(planId)
+
+    private suspend fun getCounterValue(id: String): Long =
+        counters.findOneAndUpdate(
             Counter::id eq id,
             inc(Counter::value, 1L),
             findOneAndUpdateUpsert().returnDocument(ReturnDocument.AFTER)
         )!!.value
-    }
 }

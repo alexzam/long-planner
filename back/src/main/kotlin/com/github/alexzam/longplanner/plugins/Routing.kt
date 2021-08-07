@@ -25,14 +25,19 @@ fun Application.configureRouting(storageService: StorageService) {
             route("plans") {
 
                 get {
-                    call.respondText("ok get")
-
+                    call.respond(storageService.getAllPlansShort())
                 }
+
                 post {
                     call.respond(HttpStatusCode.Created, storageService.createPlan())
                 }
 
                 route("{planId}") {
+                    get {
+                        val planId = call.parameters["planId"]!!.toLong()
+                        call.respond(storageService.getPlan(planId) ?: throw NotFoundException("Plan not found"))
+                    }
+
                     post("_updateName") {
                         val planId = call.parameters["planId"]!!.toLong()
                         val newName = call.request.queryParameters["name"]!!

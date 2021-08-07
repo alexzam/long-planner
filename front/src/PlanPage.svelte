@@ -17,8 +17,9 @@
                     plan = p;
                     planId = p._id;
                 });
-        } else if (plan == null || plan._id != planId) {
-            // load plan
+        } else if (plan == null || plan._id != id) {
+            backend.plans.getPlan(id)
+                .then(p => plan = p);
         }
     }
 

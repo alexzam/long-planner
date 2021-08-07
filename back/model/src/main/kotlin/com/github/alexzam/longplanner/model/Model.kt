@@ -44,7 +44,19 @@ data class Plan(
             listOf()
         )
     }
+
+    fun toShort() = ShortPlan(id, name)
 }
+
+@Serializable
+@Entity
+data class ShortPlan(
+    @Field
+    @SerialName("_id")
+    val id: Long,
+    @Field
+    val name: String
+)
 
 @Serializable
 data class Var(
