@@ -21,6 +21,16 @@
     }
 </script>
 
+<style>
+    .segment.plan {
+        cursor: pointer;
+    }
+
+    .segment.plan:hover {
+        background-color: #eee;
+    }
+</style>
+
 <h2>Plans</h2>
 <button class="ui primary button" on:click={startAddPlan}>
     Add

@@ -10,6 +10,6 @@
     {#if currentPlan === null}
         <PlansPage bind:currentPlan/>
     {:else }
-        <PlanPage planId={currentPlan}/>
+        <PlanPage bind:planId={currentPlan}/>
     {/if}
 </div>

@@ -27,9 +27,19 @@
         if (name == null) return
         backend.plans.updateName(planId, plan.name)
     }
+
+    function goOut() {
+        planId = null;
+    }
 </script>
 
 {#if plan != null}
+    <div class="ui breadcrumb">
+        <a class="section" on:click|preventDefault={goOut}>Home</a>
+        <div class="divider"> /</div>
+        <div class="active section">{plan.name}</div>
+    </div>
+
     <h1>
         <EditableText bind:text={plan.name}/>
     </h1>
