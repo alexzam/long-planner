@@ -22,5 +22,5 @@ allprojects {
 
     val ktorVer by extra("1.6.2")
     val logbackVer by extra("1.2.5")
-    val entityvcVer by extra("0.2.8")
+    val entityvcVer by extra("0.3.3")
 }

@@ -30,6 +30,7 @@ data class Plan(
     val start: LocalDate,
     val end: LocalDate,
     val increment: Period,
+    @Field
     val vars: List<Var>,
     val rules: List<Rule>
 ) {
@@ -59,7 +60,9 @@ data class ShortPlan(
 )
 
 @Serializable
+@Entity
 data class Var(
+    @Field
     val id: Long,
     val name: String,
     val initialValue: BigDecimal = BigDecimal.ZERO,

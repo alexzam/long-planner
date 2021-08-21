@@ -34,8 +34,6 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVer")
 
-//	implementation 'com.github.vittee.kformula:kformula:1.0.3'
-
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("io.ktor:ktor-server-tests:$ktorVer")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")

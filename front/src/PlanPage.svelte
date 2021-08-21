@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Plan} from "../generated/model";
+    import type {Plan} from "../generated/model";
     import EditableText from "./components/EditableText.svelte";
     import backend from "./backend";
 
@@ -44,4 +44,7 @@
         <EditableText bind:text={plan.name}/>
     </h1>
 {/if}
-Plan {planId} selected
+
+<p>Plan {planId} selected</p>
+
+<!--{#each plan.vars}-->

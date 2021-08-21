@@ -1,15 +1,12 @@
 package com.github.alexzam.entityvc.model.exporter
 
 import com.gitlab.alexzam.entityvc.modelexport.ExportUtil
-import com.gitlab.alexzam.entityvc.modelexport.TsGenerator
-import com.gitlab.alexzam.entityvc.useGoodfields
+import com.gitlab.alexzam.entityvc.useGoodFields
 import java.io.File
 
-fun main(args: Array<String>) {
-    ExportUtil.cliExport(args)
-
-    val generator = TsGenerator()
-        .apply { useGoodfields() }
-
-    ExportUtil.exportToFile(File("build/js/model.ts"), args[0], generator)
+fun main() {
+    ExportUtil.exportJsFile(File("build/js/modelDesc.ts"), "com.github.alexzam.longplanner.model")
+    { useGoodFields() }
+    ExportUtil.exportTsFile(File("build/js/model.ts"), "com.github.alexzam.longplanner.model")
+    { useGoodFields() }
 }
