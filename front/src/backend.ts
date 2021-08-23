@@ -1,4 +1,4 @@
-import type {Plan, ShortPlan} from "../generated/model";
+import type {Plan, ShortPlan, Var} from "../generated/model";
 
 const backHost = "";
 
@@ -23,6 +23,10 @@ const plans = {
     },
     getPlan(id: number): Promise<Plan> {
         return fetch(backHost + "/api/plans/" + id)
+            .then(resp => resp.json());
+    },
+    addVariable(planId: number): Promise<Var> {
+        return fetch(backHost + "api/plans/" + planId + "/vars", {method: "POST"})
             .then(resp => resp.json());
     }
 }

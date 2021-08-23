@@ -3,10 +3,12 @@ package com.github.alexzam.longplanner
 import com.github.alexzam.longplanner.model.Plan
 import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var
+import io.ktor.features.*
 import java.time.LocalDate
 
 class PlanningService(
-    val calcService: CalcService
+    val calcService: CalcService,
+    val storageService: StorageService
 ) {
     fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
         val varSequence = findSequence(plan.vars)
@@ -36,6 +38,14 @@ class PlanningService(
         }
 
         return calculatedPoints
+    }
+
+    suspend fun addVar(planId: Long): Var {
+        val plan = storageService.getPlan(planId) ?: throw NotFoundException("Plan $planId not found")
+        val maxVarId = plan.vars.maxOfOrNull { it.id } ?: 0
+        val varr = Var(maxVarId + 1, "no name")
+        storageService.addVarToPlan(planId, varr)
+        return varr
     }
 
     private fun calculateTimePoint(

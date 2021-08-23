@@ -27,7 +27,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService()).calculateWorld(plan)
+        val points = PlanningService(CalcService(), storageService).calculateWorld(plan)
         println("Date\tA\tB\tC\tD\tE")
         points.forEach { it.printAsRow() }
     }
@@ -57,7 +57,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService()).calculateWorld(plan, presets)
+        val points = PlanningService(CalcService(), storageService).calculateWorld(plan, presets)
 
         println("Date\tA\tB")
         points.forEach { it.printAsRow() }
@@ -120,7 +120,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val result = PlanningService(CalcService()).calculateWorld(plan, presets)
+        val result = PlanningService(CalcService(), storageService).calculateWorld(plan, presets)
 
         print("Date:\t")
         println(vars.map { it.name }.sorted().joinToString("\t"))

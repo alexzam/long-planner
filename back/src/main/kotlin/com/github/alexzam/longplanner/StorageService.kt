@@ -3,13 +3,11 @@ package com.github.alexzam.longplanner
 import com.github.alexzam.longplanner.model.Counter
 import com.github.alexzam.longplanner.model.Plan
 import com.github.alexzam.longplanner.model.ShortPlan
+import com.github.alexzam.longplanner.model.Var
 import com.mongodb.client.model.ReturnDocument
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.eq
-import org.litote.kmongo.findOneAndUpdateUpsert
-import org.litote.kmongo.inc
 import org.litote.kmongo.reactivestreams.KMongo
-import org.litote.kmongo.setValue
 
 class StorageService {
 
@@ -39,6 +37,10 @@ class StorageService {
 
     suspend fun getPlan(planId: Long): Plan? =
         plans.findOneById(planId)
+
+    suspend fun addVarToPlan(planId: Long, varr: Var) {
+        plans.updateOneById(planId, push(Plan::vars, varr))
+    }
 
     private suspend fun getCounterValue(id: String): Long =
         counters.findOneAndUpdate(

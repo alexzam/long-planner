@@ -64,8 +64,12 @@ data class ShortPlan(
 data class Var(
     @Field
     val id: Long,
+    @Field
     val name: String,
+    @Field
     val initialValue: BigDecimal = BigDecimal.ZERO,
+    @Field
     val expression: String = "0",
+    @Field
     val digitsToKeep: Int = 2
 )

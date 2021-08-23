@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.github.alexzam.longplanner.PlanningService
 import com.github.alexzam.longplanner.StorageService
 import io.ktor.application.*
 import io.ktor.features.*
@@ -7,8 +8,9 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.util.pipeline.*
 
-fun Application.configureRouting(storageService: StorageService) {
+fun Application.configureRouting(storageService: StorageService, planningService: PlanningService) {
     install(AutoHeadResponse)
 
     routing {
@@ -33,17 +35,23 @@ fun Application.configureRouting(storageService: StorageService) {
                 }
 
                 route("{planId}") {
+                    fun PipelineContext<Unit, ApplicationCall>.planId() = call.parameters["planId"]!!.toLong()
+
                     get {
-                        val planId = call.parameters["planId"]!!.toLong()
-                        call.respond(storageService.getPlan(planId) ?: throw NotFoundException("Plan not found"))
+                        call.respond(storageService.getPlan(planId()) ?: throw NotFoundException("Plan not found"))
                     }
 
                     post("_updateName") {
-                        val planId = call.parameters["planId"]!!.toLong()
                         val newName = call.request.queryParameters["name"]!!
 
-                        storageService.updateName(planId, newName)
+                        storageService.updateName(planId(), newName)
                         call.respondText("OK")
+                    }
+
+                    route("vars") {
+                        post {
+                            call.respond(planningService.addVar(planId()))
+                        }
                     }
                 }
             }

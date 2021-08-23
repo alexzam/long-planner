@@ -14,11 +14,11 @@ fun main() {
 
     // "DI"
     val calcService = CalcService()
-    val planningService = PlanningService(calcService)
     val storageService = StorageService()
+    val planningService = PlanningService(calcService, storageService)
 
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
-        configureRouting(storageService)
+        configureRouting(storageService, planningService)
         configureHTTP()
         configureSerialization()
     }.start(wait = true)

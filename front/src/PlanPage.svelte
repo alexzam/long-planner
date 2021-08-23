@@ -31,12 +31,20 @@
     function goOut() {
         planId = null;
     }
+
+    function addVariable() {
+        backend.plans.addVariable(planId)
+            .then(v => {
+                plan.vars.push(v);
+                plan = plan;
+            });
+    }
 </script>
 
 {#if plan != null}
     <div class="ui breadcrumb">
         <a class="section" on:click|preventDefault={goOut}>Home</a>
-        <div class="divider"> /</div>
+        <div class="divider">/</div>
         <div class="active section">{plan.name}</div>
     </div>
 
@@ -47,4 +55,13 @@
 
 <p>Plan {planId} selected</p>
 
-<!--{#each plan.vars}-->
+{#if plan != null}
+    {#each plan.vars as vvar}
+        <p>{vvar.id} {vvar.name}</p>
+    {/each}
+    <button class="ui primary button" on:click={addVariable}>
+        Add variable
+    </button>
+{:else}
+    Loading...
+{/if}
