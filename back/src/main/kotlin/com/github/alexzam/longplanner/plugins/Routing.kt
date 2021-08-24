@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.github.alexzam.longplanner.plugins
 
 import com.github.alexzam.longplanner.PlanningService
 import com.github.alexzam.longplanner.StorageService
@@ -21,6 +21,9 @@ fun Application.configureRouting(storageService: StorageService, planningService
         }
         static("css") {
             resources("static/css")
+        }
+        static("fonts") {
+            resources("static/fonts")
         }
 
         route("api") {

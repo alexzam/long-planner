@@ -21,23 +21,13 @@
     }
 </script>
 
-<style>
-    .segment.plan {
-        cursor: pointer;
-    }
-
-    .segment.plan:hover {
-        background-color: #eee;
-    }
-</style>
-
 <h2>Plans</h2>
 <button class="ui primary button" on:click={startAddPlan}>
     Add
 </button>
 <div class="ui segments">
     {#each plans as plan}
-        <div class="ui segment plan" on:click={() => gotoPlan(plan._id)}>
+        <div class="ui segment clickable" on:click={() => gotoPlan(plan._id)}>
             {plan.name}
         </div>
     {/each}

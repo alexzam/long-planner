@@ -25,7 +25,7 @@
     <div class="ui action input">
         <input type="text" bind:value={editText}/>
         <button class="ui icon button" on:click={clickCancel}>
-            <i class="cross icon"></i>
+            <i class="times icon"></i>
         </button>
         <button class="ui primary icon button" on:click={clickOk}>
             <i class="check icon"></i>

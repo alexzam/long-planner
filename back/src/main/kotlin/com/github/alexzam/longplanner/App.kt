@@ -1,8 +1,8 @@
 package com.github.alexzam.longplanner
 
 import com.example.plugins.configureHTTP
-import com.example.plugins.configureRouting
 import com.example.plugins.configureSerialization
+import com.github.alexzam.longplanner.plugins.configureRouting
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 

@@ -5,11 +5,14 @@ import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.Mockito.mock
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Period
 
 class PlanningServiceTest {
+    private val storageService: StorageService = mock(StorageService::class.java)
+
     @Test
     fun vars() {
         val varA = Var(1, "a", BigDecimal.ONE, "#prev.a + 1")

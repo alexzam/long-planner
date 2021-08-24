@@ -39,6 +39,10 @@
                 plan = plan;
             });
     }
+
+    function openVar(id: number) {
+        console.log("Open var " + id);
+    }
 </script>
 
 {#if plan != null}
@@ -56,11 +60,15 @@
 <p>Plan {planId} selected</p>
 
 {#if plan != null}
-    {#each plan.vars as vvar}
-        <p>{vvar.id} {vvar.name}</p>
-    {/each}
+    <div class="ui segments">
+        {#each plan.vars as vvar}
+            <div class="ui segment clickable" on:click={() => openVar(vvar.id)}>
+                {vvar.name}
+            </div>
+        {/each}
+    </div>
     <button class="ui primary button" on:click={addVariable}>
-        Add variable
+        <i class="plus icon"></i> Add variable
     </button>
 {:else}
     Loading...

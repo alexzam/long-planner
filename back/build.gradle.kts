@@ -33,6 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVer")
 
     implementation("ch.qos.logback:logback-classic:$logbackVer")
+    testImplementation("org.mockito:mockito-all:1.10.19")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("io.ktor:ktor-server-tests:$ktorVer")
