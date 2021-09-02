@@ -1,11 +1,13 @@
 <script lang="ts">
-    import type {Plan} from "../generated/model";
+    import type {Plan, Var} from "../generated/model";
     import EditableText from "./components/EditableText.svelte";
     import backend from "./backend";
+    import VarEditForm from "./components/VarEditForm.svelte";
 
     export let planId: number;
 
     let plan: Plan = null;
+    let editingVar: number = null;
 
     $: loadPlan(planId);
     $: planUpdateName(plan?.name)
@@ -41,7 +43,13 @@
     }
 
     function openVar(id: number) {
-        console.log("Open var " + id);
+        editingVar = id;
+    }
+
+    function editVar(event: CustomEvent<Var>) {
+        editingVar = null;
+        backend.plans.editVariable(planId, event.detail)
+            .then(p => plan = p);
     }
 </script>
 
@@ -62,8 +70,14 @@
 {#if plan != null}
     <div class="ui segments">
         {#each plan.vars as vvar}
-            <div class="ui segment clickable" on:click={() => openVar(vvar.id)}>
-                {vvar.name}
+            <div class="ui segment clickable" class:clickable={vvar.id !== editingVar}
+                 on:click={() => openVar(vvar.id)}>
+                {#if vvar.id !== editingVar}
+                    <div class="ui tiny label">{vvar.id}</div>
+                    {vvar.name}
+                {:else}
+                    <VarEditForm {vvar} on:done={editVar}/>
+                {/if}
             </div>
         {/each}
     </div>

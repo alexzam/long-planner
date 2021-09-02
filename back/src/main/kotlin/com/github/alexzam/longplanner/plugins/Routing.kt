@@ -6,6 +6,7 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.content.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
@@ -54,6 +55,12 @@ fun Application.configureRouting(storageService: StorageService, planningService
                     route("vars") {
                         post {
                             call.respond(planningService.addVar(planId()))
+                        }
+
+                        put("{varId}") {
+                            fun PipelineContext<Unit, ApplicationCall>.varId() = call.parameters["varId"]!!.toLong()
+
+                            call.respond(storageService.updateVar(planId(), varId(), call.receive()))
                         }
                     }
                 }

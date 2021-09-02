@@ -28,6 +28,16 @@ const plans = {
     addVariable(planId: number): Promise<Var> {
         return fetch(backHost + "api/plans/" + planId + "/vars", {method: "POST"})
             .then(resp => resp.json());
+    },
+    editVariable(planId: number, vvar: Var): Promise<Plan> {
+        return fetch(backHost + "/api/plans/" + planId + "/vars/" + vvar.id, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vvar)
+        })
+            .then(resp => resp.json());
     }
 }
 

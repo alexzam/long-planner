@@ -4,7 +4,9 @@ import com.github.alexzam.longplanner.model.Counter
 import com.github.alexzam.longplanner.model.Plan
 import com.github.alexzam.longplanner.model.ShortPlan
 import com.github.alexzam.longplanner.model.Var
+import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
+import io.ktor.features.*
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -40,6 +42,20 @@ class StorageService {
 
     suspend fun addVarToPlan(planId: Long, varr: Var) {
         plans.updateOneById(planId, push(Plan::vars, varr))
+    }
+
+    suspend fun updateVar(planId: Long, varId: Long, variable: Var): Plan {
+        val plan = getPlan(planId) ?: throw NotFoundException("Plan not found")
+        val newVars = plan.vars
+            .map {
+                if (it.id != varId) it
+                else variable
+            }
+        return plans.findOneAndUpdate(
+            Plan::id eq planId,
+            setValue(Plan::vars, newVars),
+            FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        ) ?: throw NotFoundException("Plan not found")
     }
 
     private suspend fun getCounterValue(id: String): Long =
