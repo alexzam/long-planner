@@ -3,6 +3,7 @@
     import EditableText from "./components/EditableText.svelte";
     import backend from "./backend";
     import VarEditForm from "./components/VarEditForm.svelte";
+    import RenderedExpression from "./components/RenderedExpression.svelte";
 
     export let planId: number;
 
@@ -75,6 +76,7 @@
                 {#if vvar.id !== editingVar}
                     <div class="ui tiny label">{vvar.id}</div>
                     {vvar.name}
+                    <RenderedExpression expression={vvar.expression} vars={plan.vars}/>
                 {:else}
                     <VarEditForm {vvar} on:done={editVar}/>
                 {/if}
