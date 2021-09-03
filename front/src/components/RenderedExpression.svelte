@@ -37,7 +37,7 @@
                 }
             }
         }
-        ret.push(finalizePart(currentPart));
+        if (currentPart != null) ret.push(finalizePart(currentPart));
 
         return ret;
     }
@@ -46,7 +46,12 @@
         if (part.isPrev === true && part.text.startsWith("#prev.")) part.text = part.text.substr(6);
         if (part.type === "V") {
             let id = part.text.substr(2);
-            part.text = vars.find((v) => v.id == id).name;
+            let vvar = vars.find((v) => v.id == id);
+            if (vvar === undefined) {
+                part.type = "T";
+            } else {
+                part.text = vvar.name;
+            }
         }
 
         return part;

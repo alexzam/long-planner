@@ -78,7 +78,7 @@
                     {vvar.name}
                     <RenderedExpression expression={vvar.expression} vars={plan.vars}/>
                 {:else}
-                    <VarEditForm {vvar} on:done={editVar}/>
+                    <VarEditForm {vvar} vars={plan.vars} on:done={editVar}/>
                 {/if}
             </div>
         {/each}

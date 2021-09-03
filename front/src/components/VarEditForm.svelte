@@ -1,8 +1,10 @@
 <script lang="ts">
     import type {Var} from "../../generated/model";
     import {createEventDispatcher} from 'svelte';
+    import RenderedExpression from "./RenderedExpression.svelte";
 
     export let vvar: Var = null;
+    export let vars: Array<Var>;
     let editEntity: Var = Object.assign({}, vvar);
 
     let dispatch = createEventDispatcher();
@@ -25,6 +27,9 @@
         <div class="field">
             <label>Initial value</label>
             <input type="text" bind:value={editEntity.initialValue}/>
+        </div>
+        <div>
+            <RenderedExpression expression={editEntity.expression} {vars}/>
         </div>
         <div class="field">
             <label>Expression</label>
