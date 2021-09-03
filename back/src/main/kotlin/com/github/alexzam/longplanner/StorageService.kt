@@ -44,7 +44,7 @@ class StorageService {
         plans.updateOneById(planId, push(Plan::vars, varr))
     }
 
-    suspend fun updateVar(planId: Long, varId: Long, variable: Var): Plan {
+    suspend fun updateVar(planId: Long, varId: Int, variable: Var): Plan {
         val plan = getPlan(planId) ?: throw NotFoundException("Plan not found")
         val newVars = plan.vars
             .map {

@@ -42,7 +42,7 @@ class CalcService {
         return bdRet ?: variable.initialValue
     }
 
-    fun getDependencies(variable: Var): Set<String> {
+    fun getDependencies(variable: Var): Set<Int> {
         val point = TimePoint(LocalDate.MIN, mutableMapOf(), mutableListOf())
         val loggingPropertyAccessor = LoggingPropertyAccessor()
 
@@ -64,13 +64,19 @@ object TimepointPropertyAccessor : PropertyAccessor {
     override fun getSpecificTargetClasses(): Array<Class<*>> =
         arrayOf(TimePoint::class.java)
 
-    override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean = true
+    override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean =
+        target != null
+                && target is TimePoint
+                && name.startsWith("id")
+
 
     override fun read(context: EvaluationContext, target: Any?, name: String): TypedValue {
         if (target == null) return TypedValue.NULL
         val point = target as TimePoint
 
-        return TypedValue(point[name])
+        val varId = name.drop(2).toIntOrNull() ?: return TypedValue.NULL
+
+        return TypedValue(point[varId])
     }
 
     override fun canWrite(context: EvaluationContext, target: Any?, name: String): Boolean = false
@@ -79,15 +85,16 @@ object TimepointPropertyAccessor : PropertyAccessor {
 }
 
 class LoggingPropertyAccessor : PropertyAccessor {
-    val accesses = mutableSetOf<String>()
+    val accesses = mutableSetOf<Int>()
 
     override fun getSpecificTargetClasses(): Array<Class<*>> =
         arrayOf(TimePoint::class.java)
 
-    override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean = true
+    override fun canRead(context: EvaluationContext, target: Any?, name: String): Boolean =
+        name.startsWith("id")
 
     override fun read(context: EvaluationContext, target: Any?, name: String): TypedValue {
-        if ((target as TimePoint).date == LocalDate.MIN) accesses += name
+        if ((target as TimePoint).date == LocalDate.MIN) accesses += name.drop(2).toInt()
         return TypedValue(BigDecimal.ONE)
     }
 

@@ -1,43 +1,50 @@
+@file:UseSerializers(
+    BigDecimalSerializer::class,
+    LocalDateSerializer::class
+)
+
 package com.github.alexzam.longplanner.model
 
+import com.github.alexzam.longplanner.model.serialization.BigDecimalSerializer
+import com.github.alexzam.longplanner.model.serialization.LocalDateSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 
+@Serializable
 data class TimePoint(
-    var date: LocalDate,
-    var values: MutableMap<String, BigDecimal>,
+    val date: LocalDate,
+    val values: MutableMap<Int, BigDecimal> = mutableMapOf(),
     val events: MutableList<String> = mutableListOf()
 ) {
 
-    operator fun set(variable: String, value: BigDecimal) {
-        if (variable !in values.keys) return
-        values[variable] = value
+    operator fun set(varId: Int, value: BigDecimal) {
+        values[varId] = value
     }
 
     operator fun set(variable: Var, value: BigDecimal) {
-        values[variable.name] = value
+        values[variable.id] = value
     }
 
-    operator fun get(variable: String): BigDecimal {
-        return values[variable] ?: BigDecimal.ZERO
+    operator fun get(varId: Int): BigDecimal {
+        return values[varId] ?: BigDecimal.ZERO
     }
 
     fun copy(): TimePoint {
-        val valuesCopy = mutableMapOf<String, BigDecimal>()
+        val valuesCopy = mutableMapOf<Int, BigDecimal>()
         valuesCopy.putAll(values)
         return TimePoint(date, valuesCopy)
     }
 
-    fun applyRounding(varsByName: Map<String, Var>) {
-        values = values
-            .mapValues {
-                val digitsToKeep = varsByName[it.key]!!.digitsToKeep
-                if (it.value.scale() > digitsToKeep)
-                    it.value.setScale(digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
-                else it.value
-            }
-            .toMutableMap()
+    fun applyRounding(varsById: Map<Int, Var>) {
+        values.replaceAll { id, value ->
+            val digitsToKeep = varsById[id]!!.digitsToKeep
+            if (value.scale() > digitsToKeep)
+                value.setScale(digitsToKeep, RoundingMode.HALF_DOWN).stripTrailingZeros()
+            else value
+        }
     }
 
     fun printAsRow() {

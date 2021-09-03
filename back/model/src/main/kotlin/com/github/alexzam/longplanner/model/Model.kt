@@ -63,7 +63,7 @@ data class ShortPlan(
 @Entity
 data class Var(
     @Field
-    val id: Long,
+    val id: Int,
     @Field
     val name: String,
     @Field

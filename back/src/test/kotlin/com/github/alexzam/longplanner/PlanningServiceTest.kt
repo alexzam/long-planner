@@ -15,11 +15,11 @@ class PlanningServiceTest {
 
     @Test
     fun vars() {
-        val varA = Var(1, "a", BigDecimal.ONE, "#prev.a + 1")
-        val varB = Var(2, "b", expression = "a*2")
-        val varC = Var(3, "c", expression = "b+1")
-        val varD = Var(4, "d", BigDecimal.ONE, expression = "#prev.d * 1.002", digitsToKeep = 5)
-        val varE = Var(5, "e", BigDecimal.ONE, expression = "#prev.e+d", digitsToKeep = 5)
+        val varA = Var(1, "a", BigDecimal.ONE, "#prev.id1 + 1")
+        val varB = Var(2, "b", expression = "id1*2")
+        val varC = Var(3, "c", expression = "id2+1")
+        val varD = Var(4, "d", BigDecimal.ONE, expression = "#prev.id4 * 1.002", digitsToKeep = 5)
+        val varE = Var(5, "e", BigDecimal.ONE, expression = "#prev.id5+id4", digitsToKeep = 5)
 
         val plan = Plan(
             1, "w1",
@@ -38,10 +38,10 @@ class PlanningServiceTest {
     @Test
     fun presets() {
         val presets = listOf(
-            TimePoint(LocalDate.of(2020, 1, 15), mutableMapOf("a" to BigDecimal.valueOf(20)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 2, 1), mutableMapOf("a" to BigDecimal.valueOf(30)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 2, 15), mutableMapOf("b" to BigDecimal.valueOf(51)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 3, 1), mutableMapOf("a" to BigDecimal.valueOf(40)), mutableListOf()),
+            TimePoint(LocalDate.of(2020, 1, 15), mutableMapOf(1 to BigDecimal.valueOf(20)), mutableListOf()),
+            TimePoint(LocalDate.of(2020, 2, 1), mutableMapOf(1 to BigDecimal.valueOf(30)), mutableListOf()),
+            TimePoint(LocalDate.of(2020, 2, 15), mutableMapOf(2 to BigDecimal.valueOf(51)), mutableListOf()),
+            TimePoint(LocalDate.of(2020, 3, 1), mutableMapOf(1 to BigDecimal.valueOf(40)), mutableListOf()),
         )
 
         val vars = listOf(
@@ -67,7 +67,7 @@ class PlanningServiceTest {
 
         Assert.assertArrayEquals(
             intArrayOf(40, 131),
-            listOf(points.last()["a"], points.last()["b"]).map { it.toInt() }.toIntArray()
+            listOf(points.last()[1], points.last()[2]).map { it.toInt() }.toIntArray()
         )
     }
 
@@ -77,38 +77,38 @@ class PlanningServiceTest {
             Var(2, "r02", expression = "#prev.r02"),
             Var(3, "r03", expression = "#prev.r03"),
             Var(4, "r04", expression = "r03 - r02"),
-            Var(4, "r05", expression = "#prev.r05"),
-            Var(4, "r06", expression = "0"),
-            Var(4, "r07", expression = "#prev.r07"),
-            Var(4, "r08", expression = "#prev.r08"),
-            Var(4, "r09", expression = "r02 - r07"),
-            Var(4, "r10", expression = "r06 + #prev.r10"),
-            Var(4, "r11", expression = "r02 + r04 + r05 - r07 - r08"),
-            Var(4, "r12", expression = "r11 - r10"),
-            Var(4, "r13", expression = "#prev.r13", digitsToKeep = 4),
-            Var(4, "r14", expression = "r13 + 1", digitsToKeep = 4),
-            Var(4, "r15", expression = "#prev.r15 * r14", digitsToKeep = 4),
-            Var(4, "r16", initialValue = BigDecimal.ONE, expression = "#prev.r16 + 1"),
-            Var(4, "r17", expression = "#prev.r17 + r06 / r15", digitsToKeep = 0),
-            Var(4, "r18", expression = "r11  / r15", digitsToKeep = 0),
-            Var(4, "r19", expression = "r18 - r17", digitsToKeep = 0)
+            Var(5, "r05", expression = "#prev.r05"),
+            Var(6, "r06", expression = "0"),
+            Var(7, "r07", expression = "#prev.r07"),
+            Var(8, "r08", expression = "#prev.r08"),
+            Var(9, "r09", expression = "r02 - r07"),
+            Var(10, "r10", expression = "r06 + #prev.r10"),
+            Var(11, "r11", expression = "r02 + r04 + r05 - r07 - r08"),
+            Var(12, "r12", expression = "r11 - r10"),
+            Var(13, "r13", expression = "#prev.r13", digitsToKeep = 4),
+            Var(14, "r14", expression = "r13 + 1", digitsToKeep = 4),
+            Var(15, "r15", expression = "#prev.r15 * r14", digitsToKeep = 4),
+            Var(16, "r16", initialValue = BigDecimal.ONE, expression = "#prev.r16 + 1"),
+            Var(17, "r17", expression = "#prev.r17 + r06 / r15", digitsToKeep = 0),
+            Var(18, "r18", expression = "r11  / r15", digitsToKeep = 0),
+            Var(19, "r19", expression = "r18 - r17", digitsToKeep = 0)
         )
 
         val presets = listOf(
             TimePoint(
                 LocalDate.of(2018, 7, 1), mutableMapOf(
-                    "r05" to BigDecimal.valueOf(20_079),
-                    "r06" to BigDecimal.valueOf(20_000),
-                    "r15" to BigDecimal.ONE,
+                    5 to BigDecimal.valueOf(20_079),
+                    6 to BigDecimal.valueOf(20_000),
+                    15 to BigDecimal.ONE,
                 )
             ),
             TimePoint(
                 LocalDate.of(2018, 8, 1), mutableMapOf(
-                    "r02" to BigDecimal.valueOf(106_000),
-                    "r04" to BigDecimal.valueOf(96_216),
-                    "r05" to BigDecimal.valueOf(20_254),
-                    "r06" to BigDecimal.valueOf(223_403),
-                    "r13" to BigDecimal.valueOf(0.0001),
+                    2 to BigDecimal.valueOf(106_000),
+                    4 to BigDecimal.valueOf(96_216),
+                    5 to BigDecimal.valueOf(20_254),
+                    6 to BigDecimal.valueOf(223_403),
+                    13 to BigDecimal.valueOf(0.0001),
                 )
             ),
         )

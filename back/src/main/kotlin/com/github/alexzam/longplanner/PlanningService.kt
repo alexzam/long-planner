@@ -12,7 +12,7 @@ class PlanningService(
 ) {
     fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
         val varSequence = findSequence(plan.vars)
-        val varsByName = plan.vars.associateBy { it.name }
+        val varsById = plan.vars.associateBy { it.id }
 
         val calculatedPoints = mutableListOf<TimePoint>()
         val dates = presetPoints.asSequence()
@@ -33,7 +33,7 @@ class PlanningService(
 
             calculateTimePoint(currentPoint, oldPoint, presetPointsByDate[currentPoint.date], varSequence, plan)
             oldPoint = currentPoint
-                .apply { applyRounding(varsByName) }
+                .apply { applyRounding(varsById) }
                 .also { calculatedPoints.add(it) }
         }
 
@@ -57,7 +57,7 @@ class PlanningService(
     ) {
         varSequence.forEach { variable ->
             currentPoint[variable] =
-                presetPoint?.values?.get(variable.name)
+                presetPoint?.values?.get(variable.id)
                     ?: calcService.calculateVar(variable, oldPoint, currentPoint)
         }
 
@@ -65,12 +65,12 @@ class PlanningService(
     }
 
     private fun findSequence(vars: List<Var>): List<Var> {
-        val varByNames = vars.associateBy { it.name }
-        val dependencies = vars.map { it.name to calcService.getDependencies(it) }.toMap()
-        val transitiveDependencies = vars.map { it.name to calculateTransitiveDeps(it, dependencies) }.toMap()
+        val varByIds = vars.associateBy { it.id }
+        val dependencies = vars.map { it.id to calcService.getDependencies(it) }.toMap()
+        val transitiveDependencies = vars.map { it.id to calculateTransitiveDeps(it, dependencies) }.toMap()
 
-        val toAdd = vars.map { it.name }.toMutableSet()
-        val added = mutableSetOf<String>()
+        val toAdd = vars.map { it.id }.toMutableSet()
+        val added = mutableSetOf<Int>()
         val ret = mutableListOf<Var>()
 
         while (toAdd.isNotEmpty()) {
@@ -79,7 +79,7 @@ class PlanningService(
                 (deps - added).isEmpty()
             }
 
-            ret.addAll(adding.map { varByNames[it]!! })
+            ret.addAll(adding.map { varByIds[it]!! })
             added.addAll(adding)
             toAdd.removeAll(adding)
         }
@@ -87,9 +87,9 @@ class PlanningService(
         return ret
     }
 
-    private fun calculateTransitiveDeps(variable: Var, dependencies: Map<String, Set<String>>): Set<String> {
-        val visited = mutableSetOf<String>()
-        val toCheck = dependencies[variable.name]?.let { ArrayDeque(it) }
+    private fun calculateTransitiveDeps(variable: Var, dependencies: Map<Int, Set<Int>>): Set<Int> {
+        val visited = mutableSetOf<Int>()
+        val toCheck = dependencies[variable.id]?.let { ArrayDeque(it) }
             ?: throw IllegalArgumentException("No dependencies for ${variable.name}")
 
         while (toCheck.isNotEmpty()) {
@@ -98,7 +98,7 @@ class PlanningService(
                 visited += current
 
                 val deps = dependencies[current] ?: throw IllegalArgumentException("No dependencies for $current")
-                if (variable.name in deps)
+                if (variable.id in deps)
                     throw IllegalArgumentException("Circular dependency found for ${variable.name}")
 
                 toCheck.addAll(deps)

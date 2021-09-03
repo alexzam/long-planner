@@ -31,6 +31,6 @@
             <input type="text" bind:value={editEntity.expression}/>
         </div>
         <button class="ui small button" on:click|preventDefault={onClear}>Reset</button>
-        <button class="ui small secondary button" on:click|preventDefault={onOk}>OK</button>
+        <button class="ui small secondary button" on:click|preventDefault|stopPropagation={onOk}>OK</button>
     </form>
 {/if}

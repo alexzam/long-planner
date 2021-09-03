@@ -58,7 +58,7 @@ fun Application.configureRouting(storageService: StorageService, planningService
                         }
 
                         put("{varId}") {
-                            fun PipelineContext<Unit, ApplicationCall>.varId() = call.parameters["varId"]!!.toLong()
+                            fun PipelineContext<Unit, ApplicationCall>.varId() = call.parameters["varId"]!!.toInt()
 
                             call.respond(storageService.updateVar(planId(), varId(), call.receive()))
                         }
