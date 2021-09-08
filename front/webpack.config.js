@@ -1,6 +1,7 @@
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
@@ -68,6 +69,10 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'css/[name].css'
+        }),
+        new ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
         })
     ],
     devtool: prod ? false : 'source-map',

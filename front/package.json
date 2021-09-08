@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@tsconfig/svelte": "^2.0.1",
+    "@types/jquery": "^3.5.6",
     "cross-env": "^7.0.3",
     "css-loader": "^6.2.0",
     "mini-css-extract-plugin": "^2.1.0",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@alexzam/entityvc-goodfields": "^0.1.0",
-    "fomantic-ui": "^2.8.8"
+    "fomantic-ui": "^2.8.8",
+    "jquery": "^3.4.0"
   }
 }

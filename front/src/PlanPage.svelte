@@ -4,11 +4,15 @@
     import backend from "./backend";
     import VarEditForm from "./components/VarEditForm.svelte";
     import RenderedExpression from "./components/RenderedExpression.svelte";
+    import moment from "moment";
+    import EditableDate from "./components/EditableDate.svelte";
 
     export let planId: number;
 
     let plan: Plan = null;
     let editingVar: number = null;
+
+    let tempDate = moment();
 
     $: loadPlan(planId);
     $: planUpdateName(plan?.name)
@@ -66,7 +70,7 @@
     </h1>
 {/if}
 
-<p>Plan {planId} selected</p>
+<EditableDate bind:date={tempDate}/>
 
 {#if plan != null}
     <div class="ui segments">
