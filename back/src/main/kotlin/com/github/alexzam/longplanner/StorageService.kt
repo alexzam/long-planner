@@ -40,12 +40,15 @@ class StorageService {
     suspend fun getPlan(planId: Long): Plan? =
         plans.findOneById(planId)
 
+    suspend fun getPlanOrFail(planId: Long): Plan =
+        plans.findOneById(planId) ?: throw NotFoundException("Plan not found")
+
     suspend fun addVarToPlan(planId: Long, varr: Var) {
         plans.updateOneById(planId, push(Plan::vars, varr))
     }
 
     suspend fun updateVar(planId: Long, varId: Int, variable: Var): Plan {
-        val plan = getPlan(planId) ?: throw NotFoundException("Plan not found")
+        val plan = getPlanOrFail(planId)
         val newVars = plan.vars
             .map {
                 if (it.id != varId) it
@@ -56,6 +59,18 @@ class StorageService {
             setValue(Plan::vars, newVars),
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         ) ?: throw NotFoundException("Plan not found")
+    }
+
+    /**
+     * Does not update vars
+     */
+    suspend fun updatePlanParams(plan: Plan): Plan {
+        val oldPlan = getPlanOrFail(plan.id)
+        val newPlan = plan.copy(vars = oldPlan.vars)
+
+        plans.updateOneById(plan.id, newPlan)
+
+        return newPlan
     }
 
     private suspend fun getCounterValue(id: String): Long =

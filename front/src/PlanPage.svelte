@@ -6,6 +6,7 @@
     import VarEditForm from "./components/VarEditForm.svelte";
     import RenderedExpression from "./components/RenderedExpression.svelte";
     import EditableDate from "./components/EditableDate.svelte";
+    import {assign} from "svelte/internal";
 
     export let planId: number;
 
@@ -48,7 +49,11 @@
 
     function planUpdate(..._) {
         if (freezeUpdates) return
-        backend.plans.update(plan)
+
+        let planToSend = assign({}, plan);
+        planToSend.vars = [];
+
+        backend.plans.update(planToSend)
             .then((p) => {
                 freezeUpdates = true;
                 plan = p;
@@ -93,6 +98,7 @@
         <EditableText bind:text={plan.name}/>
     </h1>
 
+    <strong>Start:</strong>
     <EditableDate bind:date={plan.start}/>
 
     <div class="ui segments">

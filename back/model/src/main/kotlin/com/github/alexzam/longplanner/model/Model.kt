@@ -31,10 +31,10 @@ data class Plan(
     val start: LocalDate,
     @Field
     val end: LocalDate,
-    val increment: Period,
+    val increment: Period = Period.ofMonths(1),
     @Field
     val vars: List<Var>,
-    val rules: List<Rule>
+    val rules: List<Rule> = listOf()
 ) {
     companion object {
         fun makeNew(id: Long): Plan = Plan(

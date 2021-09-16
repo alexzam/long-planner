@@ -28,13 +28,14 @@ const plans = {
     },
 
     update(plan: Plan): Promise<Plan> {
-        fetch(backHost + "/api/plans/" + plan._id, {
+        return fetch(backHost + "/api/plans/" + plan._id, {
             method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(model.toBackendEntity(plan))
-        });
-        return new Promise((resolve) => {
-            resolve(plan)
-        });
+        })
+            .then(resp => parseEntity(resp, "Plan"));
     },
 
     getPlans(): Promise<Array<ShortPlan>> {

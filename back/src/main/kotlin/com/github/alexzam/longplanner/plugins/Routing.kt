@@ -2,6 +2,7 @@ package com.github.alexzam.longplanner.plugins
 
 import com.github.alexzam.longplanner.PlanningService
 import com.github.alexzam.longplanner.StorageService
+import com.github.alexzam.longplanner.model.Plan
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -50,6 +51,11 @@ fun Application.configureRouting(storageService: StorageService, planningService
 
                         storageService.updateName(planId(), newName)
                         call.respondText("OK")
+                    }
+
+                    put {
+                        val plan = call.receive<Plan>()
+                        call.respond(storageService.updatePlanParams(plan))
                     }
 
                     route("vars") {
