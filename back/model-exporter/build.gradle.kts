@@ -24,7 +24,7 @@ val makeJs = tasks.create("makeJs", JavaExec::class) {
     args("com.github.alexzam.longplanner.model", file("build/js/modelDesc.ts").absolutePath)
 
     doFirst {
-        mkdir(file("build/js"))
+//        mkdir(file("build/js"))
     }
 }
 

@@ -27,6 +27,16 @@ const plans = {
         fetch(backHost + "/api/plans/" + planId + "/_updateName?name=" + name, {method: "POST"});
     },
 
+    update(plan: Plan): Promise<Plan> {
+        fetch(backHost + "/api/plans/" + plan._id, {
+            method: "PUT",
+            body: JSON.stringify(model.toBackendEntity(plan))
+        });
+        return new Promise((resolve) => {
+            resolve(plan)
+        });
+    },
+
     getPlans(): Promise<Array<ShortPlan>> {
         return fetch(backHost + "/api/plans")
             .then(resp => parseEntities(resp, "ShortPlan"));

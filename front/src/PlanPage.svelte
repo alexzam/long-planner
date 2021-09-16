@@ -1,21 +1,21 @@
 <script lang="ts">
+    import {tick} from 'svelte';
     import type {Plan, Var} from "../generated/model";
     import EditableText from "./components/EditableText.svelte";
     import backend from "./backend";
     import VarEditForm from "./components/VarEditForm.svelte";
     import RenderedExpression from "./components/RenderedExpression.svelte";
-    import moment from "moment";
     import EditableDate from "./components/EditableDate.svelte";
 
     export let planId: number;
 
     let plan: Plan = null;
     let editingVar: number = null;
-
-    let tempDate = moment();
+    let freezeUpdates: boolean = true;
 
     $: loadPlan(planId);
     $: planUpdateName(plan?.name)
+    $: planUpdate(plan?.start, plan?.end)
 
     function loadPlan(id: number) {
         if (id == 0) {
@@ -23,16 +23,40 @@
                 .then(p => {
                     plan = p;
                     planId = p._id;
-                });
+                    return tick();
+                })
+                .then(() => {
+                    freezeUpdates = false;
+                })
+            ;
         } else if (plan == null || plan._id != id) {
             backend.plans.getPlan(id)
-                .then(p => plan = p);
+                .then(p => {
+                    plan = p;
+                    return tick();
+                })
+                .then(() => {
+                    freezeUpdates = false;
+                });
         }
     }
 
     function planUpdateName(name: string | null) {
-        if (name == null) return
+        if (freezeUpdates || name == null) return
         backend.plans.updateName(planId, plan.name)
+    }
+
+    function planUpdate(..._) {
+        if (freezeUpdates) return
+        backend.plans.update(plan)
+            .then((p) => {
+                freezeUpdates = true;
+                plan = p;
+                return tick();
+            })
+            .then(() => {
+                freezeUpdates = false;
+            })
     }
 
     function goOut() {
@@ -68,11 +92,9 @@
     <h1>
         <EditableText bind:text={plan.name}/>
     </h1>
-{/if}
 
-<EditableDate bind:date={tempDate}/>
+    <EditableDate bind:date={plan.start}/>
 
-{#if plan != null}
     <div class="ui segments">
         {#each plan.vars as vvar}
             <div class="ui segment clickable" class:clickable={vvar.id !== editingVar}

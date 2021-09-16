@@ -27,7 +27,9 @@ data class Plan(
     val id: Long,
     @Field
     val name: String,
+    @Field
     val start: LocalDate,
+    @Field
     val end: LocalDate,
     val increment: Period,
     @Field
