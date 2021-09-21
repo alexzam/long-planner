@@ -46,13 +46,6 @@ fun Application.configureRouting(storageService: StorageService, planningService
                         call.respond(storageService.getPlan(planId()) ?: throw NotFoundException("Plan not found"))
                     }
 
-                    post("_updateName") {
-                        val newName = call.request.queryParameters["name"]!!
-
-                        storageService.updateName(planId(), newName)
-                        call.respondText("OK")
-                    }
-
                     put {
                         val plan = call.receive<Plan>()
                         call.respond(storageService.updatePlanParams(plan))

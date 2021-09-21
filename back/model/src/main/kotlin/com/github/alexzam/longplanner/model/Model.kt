@@ -30,7 +30,7 @@ data class Plan(
     @Field
     val start: LocalDate,
     @Field
-    val end: LocalDate,
+    val end: LocalDate?,
     val increment: Period = Period.ofMonths(1),
     @Field
     val vars: List<Var>,

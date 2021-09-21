@@ -23,10 +23,6 @@ const plans = {
             .then(resp => parseEntity(resp, "Plan"));
     },
 
-    updateName(planId: number, name: string) {
-        fetch(backHost + "/api/plans/" + planId + "/_updateName?name=" + name, {method: "POST"});
-    },
-
     update(plan: Plan): Promise<Plan> {
         return fetch(backHost + "/api/plans/" + plan._id, {
             method: "PUT",

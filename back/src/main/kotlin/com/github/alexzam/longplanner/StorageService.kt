@@ -26,10 +26,6 @@ class StorageService {
         return plan
     }
 
-    suspend fun updateName(planId: Long, newName: String) {
-        plans.updateOne(Plan::id eq planId, setValue(Plan::name, newName))
-    }
-
     suspend fun getAllPlansShort(): List<ShortPlan> =
         plans.withDocumentClass<ShortPlan>()
             .find()
