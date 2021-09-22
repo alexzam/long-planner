@@ -1,16 +1,16 @@
 <script lang="ts">
     import {tick} from 'svelte';
     import {fly} from 'svelte/transition';
-    import type {Plan, Var} from "../generated/model";
+    import type {Plan} from "../generated/model";
     import EditableText from "./components/EditableText.svelte";
     import backend from "./backend";
-    import VarEditForm from "./components/VarEditForm.svelte";
-    import RenderedExpression from "./components/RenderedExpression.svelte";
     import EditableDate from "./components/EditableDate.svelte";
     import {assign} from "svelte/internal";
     import Toggle from "./components/Toggle.svelte";
     import type {Moment} from "moment";
     import moment from "moment";
+    import VariableList from "./components/VariableList.svelte";
+    import TimePointList from "./components/TimePointList.svelte";
 
     export let planId: number;
 
@@ -22,7 +22,6 @@
 
     let plan: Plan = null;
     let planInfo: PlanInfo = {name: "", start: moment(), end: null};
-    let editingVar: number = null;
     let freezeUpdates: boolean = true;
 
     let planHasNoEnd: Boolean = true;
@@ -78,24 +77,6 @@
     function goOut() {
         planId = null;
     }
-
-    function addVariable() {
-        backend.plans.addVariable(planId)
-            .then(v => {
-                plan.vars.push(v);
-                plan = plan;
-            });
-    }
-
-    function openVar(id: number) {
-        editingVar = id;
-    }
-
-    function editVar(event: CustomEvent<Var>) {
-        editingVar = null;
-        backend.plans.editVariable(planId, event.detail)
-            .then(p => plan = p);
-    }
 </script>
 
 {#if plan != null}
@@ -123,23 +104,19 @@
         </div>
     {/if}
 
-    <div class="ui segments">
-        {#each plan.vars as vvar}
-            <div class="ui segment clickable" class:clickable={vvar.id !== editingVar}
-                 on:click={() => openVar(vvar.id)}>
-                {#if vvar.id !== editingVar}
-                    <div class="ui tiny label">{vvar.id}</div>
-                    {vvar.name}
-                    <RenderedExpression expression={vvar.expression} vars={plan.vars}/>
-                {:else}
-                    <VarEditForm {vvar} vars={plan.vars} on:done={editVar}/>
-                {/if}
-            </div>
-        {/each}
+    <div class="ui two column stackable grid">
+        <div class="column">
+            <h2>Variables</h2>
+
+            <VariableList {planId} vars={plan.vars}/>
+        </div>
+
+        <div class="column">
+            <h2>Time points</h2>
+
+            <TimePointList {planId}/>
+        </div>
     </div>
-    <button class="ui primary button" on:click={addVariable}>
-        <i class="plus icon"></i> Add variable
-    </button>
 {:else}
     Loading...
 {/if}

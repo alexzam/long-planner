@@ -47,13 +47,12 @@ const plans = {
             .then(resp => parseEntity(resp, "Var"));
     },
     editVariable(planId: number, vvar: Var): Promise<Plan> {
-        const backVar = model.toBackendEntity(vvar);
         return fetch(backHost + "/api/plans/" + planId + "/vars/" + vvar.id, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(backVar)
+            body: JSON.stringify(vvar)
         })
             .then(resp => parseEntity(resp, "Plan"));
     }
