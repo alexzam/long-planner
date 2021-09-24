@@ -53,16 +53,6 @@ data class Plan(
 
 @Serializable
 @Entity
-data class ShortPlan(
-    @Field
-    @SerialName("_id")
-    val id: Long,
-    @Field
-    val name: String
-)
-
-@Serializable
-@Entity
 data class Var(
     @Field
     val id: Int,

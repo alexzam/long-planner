@@ -43,7 +43,7 @@ class CalcService {
     }
 
     fun getDependencies(variable: Var): Set<Int> {
-        val point = TimePoint(LocalDate.MIN, mutableMapOf(), mutableListOf())
+        val point = TimePoint(0, 0, LocalDate.MIN)
         val loggingPropertyAccessor = LoggingPropertyAccessor()
 
         val evaluationContext = SimpleEvaluationContext.Builder(loggingPropertyAccessor)

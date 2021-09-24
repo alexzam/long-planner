@@ -10,7 +10,7 @@ class PlanningService(
     val calcService: CalcService,
     val storageService: StorageService
 ) {
-    fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
+    suspend fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
         val varSequence = findSequence(plan.vars)
         val varsById = plan.vars.associateBy { it.id }
 
@@ -26,12 +26,13 @@ class PlanningService(
         val presetPointsByDate = presetPoints.associateBy { it.date }
 
         var currentPoint: TimePoint
-        var oldPoint = TimePoint(LocalDate.MIN, mutableMapOf(), mutableListOf())
+        var oldPoint = TimePoint(0, plan.id, LocalDate.MIN)
 
         dates.forEach { date ->
-            currentPoint = TimePoint(date, mutableMapOf(), mutableListOf())
+            val presetPoint = presetPointsByDate[date]
+            currentPoint = presetPoint ?: storageService.timepoints.makeNew(plan.id, date)
 
-            calculateTimePoint(currentPoint, oldPoint, presetPointsByDate[currentPoint.date], varSequence, plan)
+            calculateTimePoint(currentPoint, oldPoint, presetPoint, varSequence, plan)
             oldPoint = currentPoint
                 .apply { applyRounding(varsById) }
                 .also { calculatedPoints.add(it) }
@@ -41,10 +42,10 @@ class PlanningService(
     }
 
     suspend fun addVar(planId: Long): Var {
-        val plan = storageService.getPlan(planId) ?: throw NotFoundException("Plan $planId not found")
+        val plan = storageService.plans.getPlan(planId) ?: throw NotFoundException("Plan $planId not found")
         val maxVarId = plan.vars.maxOfOrNull { it.id } ?: 0
         val varr = Var(maxVarId + 1, "no name")
-        storageService.addVarToPlan(planId, varr)
+        storageService.plans.addVarToPlan(planId, varr)
         return varr
     }
 
@@ -57,7 +58,7 @@ class PlanningService(
     ) {
         varSequence.forEach { variable ->
             currentPoint[variable] =
-                presetPoint?.values?.get(variable.id)
+                presetPoint?.presetValues?.get(variable.id)
                     ?: calcService.calculateVar(variable, oldPoint, currentPoint)
         }
 
