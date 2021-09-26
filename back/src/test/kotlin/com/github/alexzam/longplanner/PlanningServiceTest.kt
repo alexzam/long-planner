@@ -14,7 +14,7 @@ class PlanningServiceTest {
     private val storageService: StorageService = mock(StorageService::class.java)
 
     @Test
-    fun vars() {
+    suspend fun vars() {
         val varA = Var(1, "a", BigDecimal.ONE, "#prev.id1 + 1")
         val varB = Var(2, "b", expression = "id1*2")
         val varC = Var(3, "c", expression = "id2+1")
@@ -36,12 +36,12 @@ class PlanningServiceTest {
     }
 
     @Test
-    fun presets() {
+    suspend fun presets() {
         val presets = listOf(
-            TimePoint(LocalDate.of(2020, 1, 15), mutableMapOf(1 to BigDecimal.valueOf(20)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 2, 1), mutableMapOf(1 to BigDecimal.valueOf(30)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 2, 15), mutableMapOf(2 to BigDecimal.valueOf(51)), mutableListOf()),
-            TimePoint(LocalDate.of(2020, 3, 1), mutableMapOf(1 to BigDecimal.valueOf(40)), mutableListOf()),
+            TimePoint(0, 1, LocalDate.of(2020, 1, 15), mutableMapOf(1 to BigDecimal.valueOf(20))),
+            TimePoint(1, 1, LocalDate.of(2020, 2, 1), mutableMapOf(1 to BigDecimal.valueOf(30))),
+            TimePoint(1, 1, LocalDate.of(2020, 2, 15), mutableMapOf(2 to BigDecimal.valueOf(51))),
+            TimePoint(1, 1, LocalDate.of(2020, 3, 1), mutableMapOf(1 to BigDecimal.valueOf(40))),
         )
 
         val vars = listOf(
@@ -72,7 +72,7 @@ class PlanningServiceTest {
     }
 
     @Test
-    fun somethingReal() {
+    suspend fun somethingReal() {
         val vars = listOf(
             Var(2, "r02", expression = "#prev.r02"),
             Var(3, "r03", expression = "#prev.r03"),
@@ -96,6 +96,7 @@ class PlanningServiceTest {
 
         val presets = listOf(
             TimePoint(
+                1, 1,
                 LocalDate.of(2018, 7, 1), mutableMapOf(
                     5 to BigDecimal.valueOf(20_079),
                     6 to BigDecimal.valueOf(20_000),
@@ -103,6 +104,7 @@ class PlanningServiceTest {
                 )
             ),
             TimePoint(
+                1, 1,
                 LocalDate.of(2018, 8, 1), mutableMapOf(
                     2 to BigDecimal.valueOf(106_000),
                     4 to BigDecimal.valueOf(96_216),

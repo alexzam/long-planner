@@ -5,6 +5,7 @@ val logbackVer: String by extra
 plugins {
     application
     kotlin("jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 application {

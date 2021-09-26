@@ -17,9 +17,8 @@ class CalcServiceTest {
         val var3 = Var(3, "c", expression = "#prev.a + b + 1")
 
         val timePoint = TimePoint(
-            LocalDate.of(2021, 7, 1),
-            mutableMapOf(),
-            mutableListOf()
+            0, 1,
+            LocalDate.of(2021, 7, 1)
         )
 
         val val1_1 = service.calculateVar(var1, null, timePoint)
