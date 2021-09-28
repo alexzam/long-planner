@@ -2,6 +2,7 @@ package com.github.alexzam.longplanner.dao
 
 import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.TimepointStatItem
+import org.intellij.lang.annotations.Language
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import java.math.BigDecimal
@@ -50,5 +51,11 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
         ).toList()
 
         return results
+    }
+
+    suspend fun addOrGet(planId: Long, date: LocalDate): TimePoint {
+        @Language("JSON")
+        val existing = timePoints.findOne("{\"planId\": $planId, \"date\": \"$date\"}")
+        return existing ?: makeNew(planId, date).also { timePoints.insertOne(it) }
     }
 }

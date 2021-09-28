@@ -3,6 +3,7 @@ package com.github.alexzam.longplanner.plugins
 import com.github.alexzam.longplanner.PlanningService
 import com.github.alexzam.longplanner.StorageService
 import com.github.alexzam.longplanner.model.Plan
+import com.github.alexzam.longplanner.model.toShort
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -10,6 +11,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
+import java.time.LocalDate
 
 fun Route.plansRoute(storageService: StorageService, planningService: PlanningService) {
     route("plans") {
@@ -50,6 +52,11 @@ fun Route.plansRoute(storageService: StorageService, planningService: PlanningSe
                 get {
                     val stats = storageService.timepoints.getStats(planId())
                     call.respond(stats)
+                }
+
+                post {
+                    val date = LocalDate.parse(call.parameters["date"]!!)
+                    call.respond(storageService.timepoints.addOrGet(planId(), date).toShort())
                 }
             }
         }

@@ -24,10 +24,8 @@
             .calendar('set date', date.toDate(), true, false);
     });
 
-    function get() {
+    export function get() {
         let v = jQuery(el).calendar('get date');
-        console.dir(v);
-        console.dir(typeof v)
     }
 </script>
 

@@ -25,18 +25,9 @@ sealed class TimePointListItem
 
 @Serializable
 @Entity
-data class TimePack(
-    @Field
-    val number: Int,
-    @Field
-    val start: LocalDate,
-    @Field
-    val end: LocalDate
-) : TimePointListItem()
-
-@Serializable
-@Entity
 data class TimePointShort(
+    @Field
+    val id: Long,
     @Field
     val date: LocalDate,
     @Field
@@ -44,6 +35,9 @@ data class TimePointShort(
     @Field
     val eventNum: Int
 ) : TimePointListItem()
+
+fun TimePoint.toShort(): TimePointShort =
+    TimePointShort(id, date, presetValues.size + values.size, events.size)
 
 @Serializable
 @Entity
