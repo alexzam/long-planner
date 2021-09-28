@@ -11,10 +11,12 @@ fun main() {
     {
         useGoodFields()
         typeAdapters += SimpleTypeAdapter(BigDecimal::class, "string", "bigDecimal")
+        typeAdapters += SimpleTypeAdapter(Boolean::class, "boolean", "boolean")
     }
     ExportUtil.exportTsFile(File("build/js/model.ts"), "com.github.alexzam.longplanner.model")
     {
         useGoodFields()
         typeAdapters += SimpleTypeAdapter(BigDecimal::class, "string", "bigDecimal")
+        typeAdapters += SimpleTypeAdapter(Boolean::class, "boolean", "boolean")
     }
 }

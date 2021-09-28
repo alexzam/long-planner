@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type {Var} from "../../generated/model";
+    import type {Var} from "../../../generated/model";
     import {createEventDispatcher} from 'svelte';
-    import RenderedExpression from "./RenderedExpression.svelte";
+    import RenderedExpression from "../util/RenderedExpression.svelte";
 
     export let vvar: Var = null;
     export let vars: Array<Var>;

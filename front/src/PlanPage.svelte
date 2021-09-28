@@ -2,15 +2,15 @@
     import {tick} from 'svelte';
     import {fly} from 'svelte/transition';
     import type {Plan} from "../generated/model";
-    import EditableText from "./components/EditableText.svelte";
+    import EditableText from "./components/util/EditableText.svelte";
     import backend from "./backend";
-    import EditableDate from "./components/EditableDate.svelte";
+    import EditableDate from "./components/util/EditableDate.svelte";
     import {assign} from "svelte/internal";
-    import Toggle from "./components/Toggle.svelte";
+    import Toggle from "./components/util/Toggle.svelte";
     import type {Moment} from "moment";
     import moment from "moment";
-    import VariableList from "./components/VariableList.svelte";
-    import TimePointList from "./components/TimePointList.svelte";
+    import VariableList from "./components/plan/VariableList.svelte";
+    import TimePointList from "./components/plan/TimePointList.svelte";
 
     export let planId: number;
 

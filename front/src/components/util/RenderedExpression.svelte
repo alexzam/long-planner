@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Var} from "../../generated/model";
+    import type {Var} from "../../../generated/model";
 
     export let expression: string;
     export let vars: Array<Var>;

@@ -2,11 +2,9 @@ package com.github.alexzam.longplanner.dao
 
 import com.github.alexzam.longplanner.model.TimePoint
 import kotlinx.coroutines.runBlocking
-import org.litote.kmongo.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -15,17 +13,6 @@ class TimepointsDaoTest : DbTest() {
     @Test
     fun timepointsStats() {
         val collection = db.getCollection<TimePoint>()
-
-        val stage = group(
-            fields(
-                TimepointsDao.Result::isPreset from TimepointsDao.Result::isPreset,
-                TimepointsDao.Result::isCalc from TimepointsDao.Result::isCalc
-            ),
-            TimepointsDao.Result::minDate min TimePoint::date,
-            TimepointsDao.Result::maxDate max TimePoint::date,
-            TimepointsDao.Result::num sum 1
-        )
-        println(stage.toBsonDocument(JvmType.Object::class.java, collection.codecRegistry).toJson())
 
         runBlocking {
             collection.insertMany(

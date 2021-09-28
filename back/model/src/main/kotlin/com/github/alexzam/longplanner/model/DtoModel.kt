@@ -44,3 +44,18 @@ data class TimePointShort(
     @Field
     val eventNum: Int
 ) : TimePointListItem()
+
+@Serializable
+@Entity
+data class TimepointStatItem(
+    @Field
+    val isPreset: Boolean,
+    @Field
+    val isCalc: Boolean,
+    @Field
+    val minDate: LocalDate,
+    @Field
+    val maxDate: LocalDate,
+    @Field
+    val num: Int
+)

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type {Var} from "../../generated/model";
-    import RenderedExpression from "./RenderedExpression.svelte";
+    import type {Var} from "../../../generated/model";
+    import RenderedExpression from "../util/RenderedExpression.svelte";
     import VarEditForm from "./VarEditForm.svelte";
-    import backend from "../backend";
+    import backend from "../../backend";
 
     export let planId: number;
     export let vars: Array<Var>;

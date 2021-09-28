@@ -48,7 +48,8 @@ fun Route.plansRoute(storageService: StorageService, planningService: PlanningSe
 
             route("timepoints") {
                 get {
-
+                    val stats = storageService.timepoints.getStats(planId())
+                    call.respond(stats)
                 }
             }
         }
