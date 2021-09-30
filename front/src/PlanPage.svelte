@@ -114,7 +114,7 @@
         <div class="column">
             <h2>Time points</h2>
 
-            <TimePointList {planId}/>
+            <TimePointList {planId} vars={plan.vars}/>
         </div>
     </div>
 {:else}

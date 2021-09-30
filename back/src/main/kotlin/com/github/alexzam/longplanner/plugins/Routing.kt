@@ -6,6 +6,7 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.content.*
 import io.ktor.routing.*
+import io.ktor.util.pipeline.*
 
 fun Application.configureRouting(storageService: StorageService, planningService: PlanningService) {
     install(AutoHeadResponse)
@@ -25,6 +26,10 @@ fun Application.configureRouting(storageService: StorageService, planningService
 
         route("api") {
             plansRoute(storageService, planningService)
+            timepointsRoute(storageService)
         }
     }
 }
+
+fun longParamGetter(name: String): PipelineContext<Unit, ApplicationCall>.() -> Long =
+    { call.parameters[name]!!.toLong() }

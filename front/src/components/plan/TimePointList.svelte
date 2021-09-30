@@ -1,15 +1,18 @@
 <script lang="ts">
     import backend from "../../backend";
-    import type {TimePointShort, TimepointStatItem} from "../../../generated/model";
+    import type {TimePointShort, TimepointStatItem, Var} from "../../../generated/model";
     import Datepicker from "../util/Datepicker.svelte";
     import type {Moment} from "moment";
     import moment from "moment";
+    import TimepointEditForm from "./TimepointEditForm.svelte";
 
     export let planId: number;
+    export let vars: Array<Var>;
 
     type ListItem = TimepointStatItem | TimePointShort;
     let timepoints: Array<ListItem> = [];
     let newPointDate: Moment = moment();
+    let editingPoint: number = null;
 
     $: backend.plans.getTimepointsStats(planId).then((items) => timepoints = items);
 
@@ -29,16 +32,31 @@
             timepoints = timepoints;
         });
     }
+
+    function editTimepoint() {
+    }
 </script>
 
 <div class="ui segments">
     {#each timepoints as point}
-        <div>
-            {#if point._entityType === 'TimePointShort'}
-                {point.date.format()}
+        {#if point._entityType === 'TimePointShort'}
+            {#if point.id === editingPoint}
+                <div class="ui segment">
+                    <TimepointEditForm {point} {vars} on:done={editTimepoint}/>
+                </div>
             {:else}
-                {point.num}
+                <div class="ui segment clickable" on:click={() => editingPoint = point.id}>
+                    <div class="ui tiny label">{point.date.format("DD MMM YYYY")}</div>
+                </div>
             {/if}
+        {:else}
+            <div class="ui segment">
+                {point.num}: {point.minDate.format("DD MMM YYYY")} &mdash; {point.maxDate.format("DD MMM YYYY")}
+            </div>
+        {/if}
+    {:else}
+        <div class="ui segment">
+            <em>No timepoints</em>
         </div>
     {/each}
 </div>

@@ -1,4 +1,4 @@
-import type {Plan, ShortPlan, TimePointShort, TimepointStatItem, Var} from "../generated/model";
+import type {Plan, ShortPlan, TimePoint, TimePointShort, TimepointStatItem, Var} from "../generated/model";
 import model from "./model";
 import type {Entity} from "@alexzam/entityvc";
 import type {Moment} from "moment";
@@ -68,8 +68,16 @@ const plans = {
     }
 }
 
+const timepoints = {
+    get(id: number): Promise<TimePoint> {
+        return fetch(backHost + "/api/timepoints/" + id)
+            .then(resp => parseEntity(resp, "TimePoint"));
+    }
+}
+
 const api = {
-    plans
+    plans,
+    timepoints
 }
 
 export default api;

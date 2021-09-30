@@ -25,7 +25,7 @@ fun Route.plansRoute(storageService: StorageService, planningService: PlanningSe
         }
 
         route("{planId}") {
-            fun PipelineContext<Unit, ApplicationCall>.planId() = call.parameters["planId"]!!.toLong()
+            val planId = longParamGetter("planId")
 
             get {
                 call.respond(storageService.plans.getPlan(planId()) ?: throw NotFoundException("Plan not found"))

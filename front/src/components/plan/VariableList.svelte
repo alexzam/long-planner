@@ -30,7 +30,7 @@
 
 <div class="ui segments">
     {#each vars as vvar}
-        <div class="ui segment clickable" class:clickable={vvar.id !== editingVar}
+        <div class="ui segment" class:clickable={vvar.id !== editingVar}
              on:click={() => openVar(vvar.id)}>
             {#if vvar.id !== editingVar}
                 <div class="ui tiny label">{vvar.id}</div>
