@@ -1,4 +1,12 @@
-import type {Plan, ShortPlan, TimePoint, TimePointShort, TimepointStatItem, Var} from "../generated/model";
+import type {
+    Plan,
+    ShortPlan,
+    TimePoint,
+    TimePointShort,
+    TimepointStatItem,
+    TimepointWithPrev,
+    Var
+} from "../generated/model";
 import model from "./model";
 import type {Entity} from "@alexzam/entityvc";
 import type {Moment} from "moment";
@@ -72,6 +80,16 @@ const timepoints = {
     get(id: number): Promise<TimePoint> {
         return fetch(backHost + "/api/timepoints/" + id)
             .then(resp => parseEntity(resp, "TimePoint"));
+    },
+
+    getWithPrev(id: number): Promise<TimepointWithPrev> {
+        return fetch(backHost + "/api/timepoints/" + id + "?withPrev=true")
+            .then(resp => parseEntity(resp, "TimepointWithPrev"));
+    },
+
+    savePresetValue(timepointId: number, varId: number, value: string): Promise<any> {
+        return fetch(backHost + "/api/timepoints/" + timepointId + "/values/" + varId + "?value=" + value,
+            {method: 'POST'});
     }
 }
 

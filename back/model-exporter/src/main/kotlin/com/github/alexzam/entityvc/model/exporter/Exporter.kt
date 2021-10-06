@@ -12,7 +12,6 @@ fun main() {
         useGoodFields()
         typeAdapters += SimpleTypeAdapter(BigDecimal::class, "string", "bigDecimal")
         typeAdapters += SimpleTypeAdapter(Boolean::class, "boolean", "boolean")
-        typeAdapters += MapAdapter()
     }
 
     ExportUtil.exportJsFile(File("build/js/modelDesc.ts"), "com.github.alexzam.longplanner.model", modelConfig)

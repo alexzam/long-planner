@@ -62,4 +62,17 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
 
     suspend fun getById(timepointId: Long): TimePoint =
         timePoints.findOneById(timepointId) ?: throw NotFoundException("Timepoint $timepointId not found")
+
+    suspend fun getPrevOf(planId: Long, date: LocalDate): TimePoint? =
+        timePoints.find(
+            TimePoint::planId eq planId,
+            TimePoint::date lt date
+        )
+            .sort(descending(TimePoint::date))
+            .limit(1)
+            .first()
+
+    suspend fun savePresetValue(timepointId: Long, varId: Long, value: BigDecimal) {
+        timePoints.updateOneById(timepointId, "{'\$set':{'presetValues.$varId': '$value'}}")
+    }
 }

@@ -32,9 +32,6 @@
             timepoints = timepoints;
         });
     }
-
-    function editTimepoint() {
-    }
 </script>
 
 <div class="ui segments">
@@ -42,7 +39,7 @@
         {#if point._entityType === 'TimePointShort'}
             {#if point.id === editingPoint}
                 <div class="ui segment">
-                    <TimepointEditForm {point} {vars} on:done={editTimepoint}/>
+                    <TimepointEditForm {point} {vars}/>
                 </div>
             {:else}
                 <div class="ui segment clickable" on:click={() => editingPoint = point.id}>

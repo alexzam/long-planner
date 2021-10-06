@@ -11,7 +11,7 @@ import com.github.alexzam.longplanner.model.serialization.BigDecimalSerializer
 import com.github.alexzam.longplanner.model.serialization.LocalDateSerializer
 import com.github.alexzam.longplanner.model.serialization.PeriodSerializer
 import com.gitlab.alexzam.entityvc.model.Entity
-import com.gitlab.alexzam.entityvc.model.Field
+import com.gitlab.alexzam.entityvc.model.NoField
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -23,17 +23,14 @@ import java.time.Period
 @Entity
 data class Plan(
     @SerialName("_id")
-    @Field
     val id: Long,
-    @Field
     val name: String,
-    @Field
     val start: LocalDate,
-    @Field
     val end: LocalDate?,
+    @NoField
     val increment: Period = Period.ofMonths(1),
-    @Field
     val vars: List<Var>,
+    @NoField
     val rules: List<Rule> = listOf()
 ) {
     companion object {
@@ -54,14 +51,9 @@ data class Plan(
 @Serializable
 @Entity
 data class Var(
-    @Field
     val id: Int,
-    @Field
     val name: String,
-    @Field
     val initialValue: BigDecimal = BigDecimal.ZERO,
-    @Field
     val expression: String = "0",
-    @Field
     val digitsToKeep: Int = 2
 )
