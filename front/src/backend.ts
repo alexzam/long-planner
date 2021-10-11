@@ -21,9 +21,16 @@ function parseEntities<T extends Entity>(resp: Response, entityName: string): Pr
     return resp.json().then(records => records.map(record => model.fromBackendEntity(record, entityName)));
 }
 
+const url = {
+    plans: backHost + "/api/plans",
+    plan(id: number): string {
+        return url.plans + "/" + id
+    }
+}
+
 const plans = {
     createPlan(): Promise<Plan> {
-        return fetch(backHost + "/api/plans", {
+        return fetch(url.plans, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +40,7 @@ const plans = {
     },
 
     update(plan: Plan): Promise<Plan> {
-        return fetch(backHost + "/api/plans/" + plan._id, {
+        return fetch(url.plan(plan._id), {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -44,19 +51,19 @@ const plans = {
     },
 
     getPlans(): Promise<Array<ShortPlan>> {
-        return fetch(backHost + "/api/plans")
+        return fetch(url.plans)
             .then(resp => parseEntities(resp, "ShortPlan"));
     },
     getPlan(id: number): Promise<Plan> {
-        return fetch(backHost + "/api/plans/" + id)
+        return fetch(url.plan(id))
             .then(resp => parseEntity(resp, "Plan"));
     },
     addVariable(planId: number): Promise<Var> {
-        return fetch(backHost + "api/plans/" + planId + "/vars", {method: "POST"})
+        return fetch(url.plan(planId) + "/vars", {method: "POST"})
             .then(resp => parseEntity(resp, "Var"));
     },
     editVariable(planId: number, vvar: Var): Promise<Plan> {
-        return fetch(backHost + "/api/plans/" + planId + "/vars/" + vvar.id, {
+        return fetch(url.plan(planId) + "/vars/" + vvar.id, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -66,13 +73,17 @@ const plans = {
             .then(resp => parseEntity(resp, "Plan"));
     },
     getTimepointsStats(planId: number): Promise<Array<TimepointStatItem>> {
-        return fetch(backHost + "/api/plans/" + planId + "/timepoints")
+        return fetch(url.plan(planId) + "/timepoints")
             .then(resp => parseEntities(resp, "TimepointStatItem"));
     },
     addTimepoint(planId: number, date: Moment): Promise<TimePointShort> {
-        return fetch(backHost + "/api/plans/" + planId + "/timepoints?date=" + date.format("YYYY-MM-DD"),
+        return fetch(url.plan(planId) + "/timepoints?date=" + date.format("YYYY-MM-DD"),
             {method: "POST"})
             .then(resp => parseEntity(resp, "TimePointShort"));
+    },
+    calculate(planId: number): Promise<Plan> {
+        return fetch(url.plan(planId) + "/_calculate", {method: 'POST'})
+            .then(resp => parseEntity(resp, "Plan"));
     }
 }
 

@@ -25,6 +25,7 @@
     let freezeUpdates: boolean = true;
 
     let planHasNoEnd: Boolean = true;
+    let pointList: TimePointList;
 
     $: loadPlan(planId);
     $: planUpdate(planInfo)
@@ -67,6 +68,8 @@
             planInfo.start = plan.start;
             planInfo.end = plan.end;
 
+            pointList.refresh();
+
             return tick();
         })
             .then(() => {
@@ -77,7 +80,17 @@
     function goOut() {
         planId = null;
     }
+
+    function calculate() {
+        setPlan(backend.plans.calculate(planId));
+    }
 </script>
+
+<style>
+    .ui.grid {
+        margin-top: 0;
+    }
+</style>
 
 {#if plan != null}
     <div class="ui breadcrumb">
@@ -98,7 +111,7 @@
     </div>
 
     {#if !planHasNoEnd}
-        <div transition:fly|local="{{y: -10}}">
+        <div transition:fly|local={{y: -10}}>
             <strong>End:</strong>
             <EditableDate bind:date={planInfo.end}/>
         </div>
@@ -114,7 +127,15 @@
         <div class="column">
             <h2>Time points</h2>
 
-            <TimePointList {planId} vars={plan.vars}/>
+            <TimePointList bind:this={pointList} {planId} vars={plan.vars}/>
+        </div>
+    </div>
+
+    <div class="ui centered grid">
+        <div class="ui ten wide column">
+            <button class="ui fluid primary huge button" on:click={calculate}>
+                Calculate
+            </button>
         </div>
     </div>
 {:else}

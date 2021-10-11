@@ -13,7 +13,7 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
     private val timePoints = db.getCollection<TimePoint>()
 
     suspend fun makeNew(planId: Long, date: LocalDate): TimePoint =
-        TimePoint(counterDao.getCounterValue("timepoint"), planId, date)
+        TimePoint(generateId(), planId, date)
 
     suspend fun getStats(planId: Long): List<TimepointStatItem> {
         val results = timePoints.aggregate<TimepointStatItem>(
@@ -75,4 +75,15 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
     suspend fun savePresetValue(timepointId: Long, varId: Long, value: BigDecimal) {
         timePoints.updateOneById(timepointId, "{'\$set':{'presetValues.$varId': '$value'}}")
     }
+
+    suspend fun getPresetPoints(planId: Long): List<TimePoint> =
+        timePoints.find(TimePoint::planId eq planId, TimePoint::presetValues ne mapOf())
+            .toList()
+
+    suspend fun replacePoints(planId: Long, points: List<TimePoint>) {
+        timePoints.deleteMany(TimePoint::planId eq planId)
+        timePoints.insertMany(points)
+    }
+
+    private suspend fun generateId() = counterDao.getCounterValue("timepoint")
 }

@@ -5,7 +5,6 @@ import com.github.alexzam.longplanner.StorageService
 import com.github.alexzam.longplanner.model.Plan
 import com.github.alexzam.longplanner.model.toShort
 import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -28,12 +27,22 @@ fun Route.plansRoute(storageService: StorageService, planningService: PlanningSe
             val planId = longParamGetter("planId")
 
             get {
-                call.respond(storageService.plans.getPlan(planId()) ?: throw NotFoundException("Plan not found"))
+                call.respond(storageService.plans.getPlanOrFail(planId()))
             }
 
             put {
                 val plan = call.receive<Plan>()
                 call.respond(storageService.plans.updatePlanParams(plan))
+            }
+
+            post("_calculate") {
+                val id = planId()
+                val plan = storageService.plans.getPlanOrFail(id)
+                val presetTimepoints = storageService.timepoints.getPresetPoints(id)
+                val points = planningService.calculateWorld(plan, presetTimepoints)
+                storageService.timepoints.replacePoints(id, points)
+
+                call.respond(plan)
             }
 
             route("vars") {

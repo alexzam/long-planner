@@ -14,7 +14,7 @@
     let newPointDate: Moment = moment();
     let editingPoint: number = null;
 
-    $: backend.plans.getTimepointsStats(planId).then((items) => timepoints = items);
+    $: refresh(planId);
 
     function sortPoints() {
         timepoints.sort((a, b) => {
@@ -31,6 +31,10 @@
             sortPoints();
             timepoints = timepoints;
         });
+    }
+
+    export function refresh(id: number = 0) {
+        backend.plans.getTimepointsStats(planId).then((items) => timepoints = items);
     }
 </script>
 
