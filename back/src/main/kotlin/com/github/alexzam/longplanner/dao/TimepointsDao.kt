@@ -85,5 +85,12 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
         timePoints.insertMany(points)
     }
 
+    suspend fun getLastDate(planId: Long): LocalDate? =
+        timePoints.find(TimePoint::planId eq planId)
+            .sort(descending(TimePoint::date))
+            .limit(1)
+            .first()
+            ?.date
+
     private suspend fun generateId() = counterDao.getCounterValue("timepoint")
 }

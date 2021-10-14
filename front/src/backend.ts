@@ -21,6 +21,11 @@ function parseEntities<T extends Entity>(resp: Response, entityName: string): Pr
     return resp.json().then(records => records.map(record => model.fromBackendEntity(record, entityName)));
 }
 
+function maybeConvertToBack(obj: any): any {
+    if (obj._entityType === undefined) return obj;
+    return model.toBackendEntity(obj);
+}
+
 const url = {
     plans: backHost + "/api/plans",
     plan(id: number): string {
@@ -68,7 +73,7 @@ const plans = {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(vvar)
+            body: JSON.stringify(maybeConvertToBack(vvar))
         })
             .then(resp => parseEntity(resp, "Plan"));
     },

@@ -7,18 +7,20 @@ import io.ktor.features.*
 import java.time.LocalDate
 
 class PlanningService(
-    val calcService: CalcService,
-    val storageService: StorageService
+    private val calcService: CalcService,
+    private val storageService: StorageService
 ) {
     suspend fun calculateWorld(plan: Plan, presetPoints: List<TimePoint> = listOf()): List<TimePoint> {
         val varSequence = findSequence(plan.vars)
         val varsById = plan.vars.associateBy { it.id }
 
         val calculatedPoints = mutableListOf<TimePoint>()
+
+        val planEnd = plan.end ?: storageService.timepoints.getLastDate(plan.id) ?: plan.start
         val dates = presetPoints.asSequence()
             .map { it.date }
             .plus(generateSequence(plan.start) { date ->
-                date.plus(plan.increment).takeIf { it <= plan.end }
+                date.plus(plan.increment).takeIf { it <= planEnd }
             })
             .sorted()
             .distinct()
