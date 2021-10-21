@@ -6,9 +6,21 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import java.time.LocalDate
 
 fun Route.timepointsRoute(storageService: StorageService) {
     route("timepoints") {
+        get {
+            val from = call.parameters["from"]?.let { LocalDate.parse(it) }
+                ?: throw BadRequestException("No 'from' parameter")
+            val to = call.parameters["to"]?.let { LocalDate.parse(it) }
+                ?: throw BadRequestException("No 'to' parameter")
+            val size = call.parameters["size"]?.toIntOrNull() ?: 10
+            val planId = call.parameters["planId"]?.toLongOrNull() ?: throw BadRequestException("No plan id")
+
+            call.respond(storageService.timepoints.getPage(planId, from, to, size))
+        }
+
         route("{timepointId}") {
             val timepointId = longParamGetter("timepointId")
             get {

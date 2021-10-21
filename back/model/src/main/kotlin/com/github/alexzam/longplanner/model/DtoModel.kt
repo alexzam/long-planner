@@ -48,3 +48,10 @@ data class TimepointWithPrev(
     val cur: TimePoint,
     val prev: TimePoint?
 )
+
+@Entity
+@Serializable
+data class TimePointPage(
+    val items: List<TimePointShort>,
+    val next: LocalDate?
+)

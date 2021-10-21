@@ -1,7 +1,10 @@
 package com.github.alexzam.longplanner.dao
 
 import com.github.alexzam.longplanner.model.TimePoint
+import com.github.alexzam.longplanner.model.TimePointPage
 import com.github.alexzam.longplanner.model.TimepointStatItem
+import com.github.alexzam.longplanner.model.toShort
+import com.mongodb.client.model.Filters
 import io.ktor.features.*
 import org.intellij.lang.annotations.Language
 import org.litote.kmongo.*
@@ -91,6 +94,21 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
             .limit(1)
             .first()
             ?.date
+
+    suspend fun getPage(planId: Long, from: LocalDate, to: LocalDate, size: Int): TimePointPage {
+        val points = timePoints.find(
+            TimePoint::planId eq planId,
+            Filters.gte("date", from.toString()),
+            Filters.lte("date", to.toString())
+        )
+            .sort(ascending(TimePoint::date))
+            .limit(size + 1)
+            .toList()
+
+        val nextDate = if (points.size > size) points.last().date else null
+        val items = if (points.size > size) points.dropLast(1) else points
+        return TimePointPage(items.map { it.toShort() }, nextDate)
+    }
 
     private suspend fun generateId() = counterDao.getCounterValue("timepoint")
 }

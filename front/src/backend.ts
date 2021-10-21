@@ -2,6 +2,7 @@ import type {
     Plan,
     ShortPlan,
     TimePoint,
+    TimePointPage,
     TimePointShort,
     TimepointStatItem,
     TimepointWithPrev,
@@ -106,6 +107,17 @@ const timepoints = {
     savePresetValue(timepointId: number, varId: number, value: string): Promise<any> {
         return fetch(backHost + "/api/timepoints/" + timepointId + "/values/" + varId + "?value=" + value,
             {method: 'POST'});
+    },
+
+    getPage(planId: number, minDate: Moment, maxDate: Moment, size: number): Promise<TimePointPage> {
+        return fetch(backHost + "/api/timepoints?planId=" + planId + "&from="
+            + minDate.format("YYYY-MM-DD") + "&to=" + maxDate.format("YYYY-MM-DD") + "&size=" + size)
+            .then(resp => parseEntity(resp, "TimePointPage"))
+            .then((page: TimePointPage) => {
+                // @ts-ignore
+                page.items = page.items.map(item => model.fromBackendEntity(item, 'TimePointShort'));
+                return page
+            });
     }
 }
 

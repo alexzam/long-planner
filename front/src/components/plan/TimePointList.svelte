@@ -1,6 +1,6 @@
 <script lang="ts">
     import backend from "../../backend";
-    import type {TimePointShort, TimepointStatItem, Var} from "../../../generated/model";
+    import type {TimePointPage, TimePointShort, TimepointStatItem, Var} from "../../../generated/model";
     import Datepicker from "../util/Datepicker.svelte";
     import type {Moment} from "moment";
     import moment from "moment";
@@ -36,6 +36,18 @@
     export function refresh(id: number = 0) {
         backend.plans.getTimepointsStats(planId).then((items) => timepoints = items);
     }
+
+    function loadPoints(pointPack: TimepointStatItem) {
+        backend.timepoints.getPage(planId, pointPack.minDate, pointPack.maxDate, 10).then((points: TimePointPage) => {
+            pointPack.num -= points.items.length;
+            pointPack.minDate = points.next;
+            if (pointPack.num <= 0) timepoints.splice(timepoints.indexOf(pointPack), 1)
+
+            timepoints.push(...points.items);
+            sortPoints();
+            timepoints = timepoints;
+        });
+    }
 </script>
 
 <div class="ui segments">
@@ -51,8 +63,11 @@
                 </div>
             {/if}
         {:else}
-            <div class="ui segment">
-                {point.num}: {point.minDate.format("DD MMM YYYY")} &mdash; {point.maxDate.format("DD MMM YYYY")}
+            <div class="ui center aligned segment clickable" on:click={() => loadPoints(point)}>
+                <strong>
+                    {point.num} points from {point.minDate.format("DD MMM YYYY")}
+                    to {point.maxDate.format("DD MMM YYYY")}
+                </strong>
             </div>
         {/if}
     {:else}
