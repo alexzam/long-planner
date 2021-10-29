@@ -95,12 +95,23 @@ class TimepointsDao(db: CoroutineDatabase, private val counterDao: CounterDao) {
             .first()
             ?.date
 
-    suspend fun getPage(planId: Long, from: LocalDate, to: LocalDate, size: Int): TimePointPage {
-        val points = timePoints.find(
+    suspend fun getPage(
+        planId: Long,
+        from: LocalDate,
+        to: LocalDate,
+        isCalc: Boolean?,
+        isPreset: Boolean?,
+        size: Int
+    ): TimePointPage {
+        val filters = listOfNotNull(
             TimePoint::planId eq planId,
             Filters.gte("date", from.toString()),
-            Filters.lte("date", to.toString())
+            Filters.lte("date", to.toString()),
+            isCalc?.let { if (it) TimePoint::values ne mutableMapOf() else TimePoint::values eq mutableMapOf() },
+            isPreset?.let { if (it) TimePoint::presetValues ne mutableMapOf() else TimePoint::presetValues eq mutableMapOf() }
         )
+            .toTypedArray()
+        val points = timePoints.find(*filters)
             .sort(ascending(TimePoint::date))
             .limit(size + 1)
             .toList()

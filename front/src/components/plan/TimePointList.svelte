@@ -38,15 +38,16 @@
     }
 
     function loadPoints(pointPack: TimepointStatItem) {
-        backend.timepoints.getPage(planId, pointPack.minDate, pointPack.maxDate, 10).then((points: TimePointPage) => {
-            pointPack.num -= points.items.length;
-            pointPack.minDate = points.next;
-            if (pointPack.num <= 0) timepoints.splice(timepoints.indexOf(pointPack), 1)
+        backend.timepoints.getPage(planId, pointPack.minDate, pointPack.maxDate, pointPack.isCalc, pointPack.isPreset, 10)
+            .then((points: TimePointPage) => {
+                pointPack.num -= points.items.length;
+                pointPack.minDate = points.next;
+                if (pointPack.num <= 0) timepoints.splice(timepoints.indexOf(pointPack), 1)
 
-            timepoints.push(...points.items);
-            sortPoints();
-            timepoints = timepoints;
-        });
+                timepoints.push(...points.items);
+                sortPoints();
+                timepoints = timepoints;
+            });
     }
 </script>
 
@@ -67,6 +68,12 @@
                 <strong>
                     {point.num} points from {point.minDate.format("DD MMM YYYY")}
                     to {point.maxDate.format("DD MMM YYYY")}
+                    {#if point.isCalc}
+                        <div class="ui tiny label">C</div>
+                    {/if}
+                    {#if point.isPreset}
+                        <div class="ui tiny label">P</div>
+                    {/if}
                 </strong>
             </div>
         {/if}

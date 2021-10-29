@@ -17,8 +17,10 @@ fun Route.timepointsRoute(storageService: StorageService) {
                 ?: throw BadRequestException("No 'to' parameter")
             val size = call.parameters["size"]?.toIntOrNull() ?: 10
             val planId = call.parameters["planId"]?.toLongOrNull() ?: throw BadRequestException("No plan id")
+            val isCalc = call.parameters["calc"]?.toBooleanStrictOrNull()
+            val isPreset = call.parameters["preset"]?.toBooleanStrictOrNull()
 
-            call.respond(storageService.timepoints.getPage(planId, from, to, size))
+            call.respond(storageService.timepoints.getPage(planId, from, to, isCalc, isPreset, size))
         }
 
         route("{timepointId}") {
