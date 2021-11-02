@@ -33,11 +33,11 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVer")
 
     implementation("ch.qos.logback:logback-classic:$logbackVer")
-    testImplementation("org.mockito:mockito-all:1.10.19")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("io.ktor:ktor-server-tests:$ktorVer")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
+    testImplementation("io.mockk:mockk:1.12.0")
 }
 
 tasks.register<Copy>("importFront") {

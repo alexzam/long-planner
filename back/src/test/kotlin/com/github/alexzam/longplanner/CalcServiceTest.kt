@@ -3,9 +3,9 @@ package com.github.alexzam.longplanner;
 import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var
 import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.test.Test
 
 class CalcServiceTest {
     @Test
@@ -13,8 +13,8 @@ class CalcServiceTest {
         val service = CalcService()
 
         val var1 = Var(1, "a", expression = "13")
-        val var2 = Var(2, "b", expression = "a * 2")
-        val var3 = Var(3, "c", expression = "#prev.a + b + 1")
+        val var2 = Var(2, "b", expression = "id1 * 2")
+        val var3 = Var(3, "c", expression = "#prev.id1 + id2 + 1")
 
         val timePoint = TimePoint(
             0, 1,

@@ -14,13 +14,20 @@ import java.time.LocalDate
 class CalcService {
     private val parser = SpelExpressionParser()
 
-    fun calculateVar(variable: Var, prevTimePoint: TimePoint?, currentTimePoint: TimePoint): BigDecimal {
+    fun calculateVar(
+        variable: Var, prevTimePoint: TimePoint?, currentTimePoint: TimePoint,
+        prevMonthPoint: TimePoint? = null
+    ): BigDecimal {
         val evaluationContext = SimpleEvaluationContext.Builder(TimepointPropertyAccessor)
             .withRootObject(currentTimePoint)
             .build()
             .apply {
                 setVariable("prev", prevTimePoint)
             }
+
+        prevMonthPoint?.also {
+            evaluationContext.setVariable("prevmon", it)
+        }
 
         val ret = try {
             parser.parseExpression(variable.expression)
@@ -50,7 +57,9 @@ class CalcService {
             .withRootObject(point)
             .build()
             .apply {
-                setVariable("prev", point.copy(date = LocalDate.MAX))
+                val copy = point.copy(date = LocalDate.MAX)
+                setVariable("prev", copy)
+                setVariable("prevmon", copy)
             }
 
         parser.parseExpression(variable.expression)

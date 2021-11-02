@@ -41,7 +41,7 @@ class TimepointsDaoTest : DbTest() {
                 )
             )
 
-            val dao = TimepointsDao(db, CounterDao(db))
+            val dao = TimepointsDao(db, CounterDaoImpl(db))
 
             val stats = dao.getStats(1)
 

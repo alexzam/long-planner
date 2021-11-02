@@ -1,20 +1,38 @@
 package com.github.alexzam.longplanner
 
+import com.github.alexzam.longplanner.dao.CounterDao
+import com.github.alexzam.longplanner.dao.TimepointsDao
 import com.github.alexzam.longplanner.model.Plan
 import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var
+import io.mockk.every
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
-import org.junit.Test
-import org.mockito.Mockito.mock
+import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Period
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
+@ExtendWith(MockKExtension::class)
 class PlanningServiceTest {
-    private val storageService: StorageService = mock(StorageService::class.java)
+    private object counterDao : CounterDao {
+        val seq = generateSequence(1L) { it + 1 }.iterator()
+        override suspend fun getCounterValue(id: String): Long = seq.next()
+    }
+
+    val timepointsDao: TimepointsDao = TimepointsDao(mockk(relaxed = true), counterDao)
+
+    private val storageService: StorageService = mockk() {
+        every { timepoints } returns timepointsDao
+    }
 
     @Test
-    suspend fun vars() {
+    fun vars() {
         val varA = Var(1, "a", BigDecimal.ONE, "#prev.id1 + 1")
         val varB = Var(2, "b", expression = "id1*2")
         val varC = Var(3, "c", expression = "id2+1")
@@ -30,13 +48,13 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService(), storageService).calculateWorld(plan)
+        val points = runBlocking { PlanningService(CalcService(), storageService).calculateWorld(plan) }
         println("Date\tA\tB\tC\tD\tE")
         points.forEach { it.printAsRow() }
     }
 
     @Test
-    suspend fun presets() {
+    fun presets() {
         val presets = listOf(
             TimePoint(0, 1, LocalDate.of(2020, 1, 15), mutableMapOf(1 to BigDecimal.valueOf(20))),
             TimePoint(1, 1, LocalDate.of(2020, 2, 1), mutableMapOf(1 to BigDecimal.valueOf(30))),
@@ -45,8 +63,8 @@ class PlanningServiceTest {
         )
 
         val vars = listOf(
-            Var(1, "a", expression = "#prev.a"),
-            Var(2, "b", expression = "#prev.b + a")
+            Var(1, "a", expression = "#prev.id1"),
+            Var(2, "b", expression = "#prev.id2 + id1")
         )
 
         val end = LocalDate.of(2020, 4, 1)
@@ -60,7 +78,7 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val points = PlanningService(CalcService(), storageService).calculateWorld(plan, presets)
+        val points = runBlocking { PlanningService(CalcService(), storageService).calculateWorld(plan, presets) }
 
         println("Date\tA\tB")
         points.forEach { it.printAsRow() }
@@ -72,26 +90,26 @@ class PlanningServiceTest {
     }
 
     @Test
-    suspend fun somethingReal() {
+    fun somethingReal() {
         val vars = listOf(
-            Var(2, "r02", expression = "#prev.r02"),
-            Var(3, "r03", expression = "#prev.r03"),
-            Var(4, "r04", expression = "r03 - r02"),
-            Var(5, "r05", expression = "#prev.r05"),
-            Var(6, "r06", expression = "0"),
-            Var(7, "r07", expression = "#prev.r07"),
-            Var(8, "r08", expression = "#prev.r08"),
-            Var(9, "r09", expression = "r02 - r07"),
-            Var(10, "r10", expression = "r06 + #prev.r10"),
-            Var(11, "r11", expression = "r02 + r04 + r05 - r07 - r08"),
-            Var(12, "r12", expression = "r11 - r10"),
-            Var(13, "r13", expression = "#prev.r13", digitsToKeep = 4),
-            Var(14, "r14", expression = "r13 + 1", digitsToKeep = 4),
-            Var(15, "r15", expression = "#prev.r15 * r14", digitsToKeep = 4),
-            Var(16, "r16", initialValue = BigDecimal.ONE, expression = "#prev.r16 + 1"),
-            Var(17, "r17", expression = "#prev.r17 + r06 / r15", digitsToKeep = 0),
-            Var(18, "r18", expression = "r11  / r15", digitsToKeep = 0),
-            Var(19, "r19", expression = "r18 - r17", digitsToKeep = 0)
+            Var(2, "id02", expression = "#prev.id02"),
+            Var(3, "id03", expression = "#prev.id03"),
+            Var(4, "id04", expression = "id03 - id02"),
+            Var(5, "id05", expression = "#prev.id05"),
+            Var(6, "id06", expression = "0"),
+            Var(7, "id07", expression = "#prev.id07"),
+            Var(8, "id08", expression = "#prev.id08"),
+            Var(9, "id09", expression = "id02 - id07"),
+            Var(10, "id10", expression = "id06 + #prev.id10"),
+            Var(11, "id11", expression = "id02 + id04 + id05 - id07 - id08"),
+            Var(12, "id12", expression = "id11 - id10"),
+            Var(13, "id13", expression = "#prev.id13", digitsToKeep = 4),
+            Var(14, "id14", expression = "id13 + 1", digitsToKeep = 4),
+            Var(15, "id15", expression = "#prev.id15 * id14", digitsToKeep = 4),
+            Var(16, "id16", initialValue = BigDecimal.ONE, expression = "#prev.id16 + 1"),
+            Var(17, "id17", expression = "#prev.id17 + id06 / id15", digitsToKeep = 0),
+            Var(18, "id18", expression = "id11  / id15", digitsToKeep = 0),
+            Var(19, "id19", expression = "id18 - id17", digitsToKeep = 0)
         )
 
         val presets = listOf(
@@ -125,10 +143,34 @@ class PlanningServiceTest {
             listOf()
         )
 
-        val result = PlanningService(CalcService(), storageService).calculateWorld(plan, presets)
+        val result = runBlocking { PlanningService(CalcService(), storageService).calculateWorld(plan, presets) }
 
         print("Date:\t")
         println(vars.map { it.name }.sorted().joinToString("\t"))
         result.forEach { it.printAsRow() }
+    }
+
+    @Test
+    fun prevMonthPoint() {
+        val vars = listOf(
+            Var(1, "moncounter", expression = "#prevmon.id1 + 1", initialValue = BigDecimal.ONE),
+            Var(2, "counter", expression = "#prev.id2 + 1", initialValue = BigDecimal.ONE)
+        )
+
+        val plan = Plan(
+            4,
+            "prevmon",
+            LocalDate.of(2019, 1, 1),
+            LocalDate.of(2019, 12, 31),
+            Period.ofDays(7),
+            vars,
+            listOf()
+        )
+
+        val result = runBlocking { PlanningService(CalcService(), storageService).calculateWorld(plan, listOf()) }
+
+        result.last().printAsRow()
+        assertEquals(12, result.last().values[1]?.toInt())
+        assertThat("counter should be greater than 12", 12 < (result.last().values[2]?.toInt() ?: 0))
     }
 }

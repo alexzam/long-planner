@@ -5,6 +5,7 @@ import com.github.alexzam.longplanner.model.TimePoint
 import com.github.alexzam.longplanner.model.Var
 import io.ktor.features.*
 import java.time.LocalDate
+import java.time.Month
 
 class PlanningService(
     private val calcService: CalcService,
@@ -29,12 +30,21 @@ class PlanningService(
 
         var currentPoint: TimePoint
         var oldPoint = TimePoint(0, plan.id, LocalDate.MIN)
+        var currentMonth: Month? = null
+        var prevMonthPoint: TimePoint? = null
+        var currentMonthPoint: TimePoint? = null
 
         dates.forEach { date ->
             val presetPoint = presetPointsByDate[date]
             currentPoint = presetPoint ?: storageService.timepoints.makeNew(plan.id, date)
 
-            calculateTimePoint(currentPoint, oldPoint, presetPoint, varSequence, plan)
+            if (currentMonth != date.month) {
+                currentMonth = date.month
+                prevMonthPoint = currentMonthPoint
+                currentMonthPoint = currentPoint
+            }
+
+            calculateTimePoint(currentPoint, oldPoint, prevMonthPoint, presetPoint, varSequence, plan)
             oldPoint = currentPoint
                 .apply { applyRounding(varsById) }
                 .also { calculatedPoints.add(it) }
@@ -54,6 +64,7 @@ class PlanningService(
     private fun calculateTimePoint(
         currentPoint: TimePoint,
         oldPoint: TimePoint,
+        prevMonthPoint: TimePoint?,
         presetPoint: TimePoint?,
         varSequence: List<Var>,
         plan: Plan
@@ -61,7 +72,7 @@ class PlanningService(
         varSequence.forEach { variable ->
             currentPoint[variable] =
                 presetPoint?.presetValues?.get(variable.id)
-                    ?: calcService.calculateVar(variable, oldPoint, currentPoint)
+                    ?: calcService.calculateVar(variable, oldPoint, currentPoint, prevMonthPoint)
         }
 
         plan.rules.forEach { it.doApply(oldPoint, currentPoint, plan.rules) }
